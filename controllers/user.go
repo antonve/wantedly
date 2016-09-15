@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 	"wantedly/api/models"
@@ -48,9 +49,9 @@ func APIUserLogin(context echo.Context) error {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate encoded token and send it as response.
-	encodedToken, err := token.SignedString([]byte("secret"))
+	encodedToken, err := token.SignedString([]byte(os.Getenv("WANTEDLY_JWT_KEY")))
 	if err != nil {
-		return err
+		return Return500(context, err.Error())
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
