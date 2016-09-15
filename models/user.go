@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 	"fmt"
+
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // UserCollection array of users
@@ -18,6 +20,14 @@ type User struct {
 	Password []byte `json:"password" db:"password"`
 }
 
+// JwtClaims json web token claim
+type JwtClaims struct {
+	Id    uint64 `json:"id" db:"id"`
+	Email string `json:"email" db:"email"`
+	Name  string `json:"name" db:"name"`
+	jwt.StandardClaims
+}
+
 // Length returns the amount of users in the collection
 func (userCollection *UserCollection) Length() int {
 	return len(userCollection.Users)
@@ -31,7 +41,7 @@ func (user *User) Validate() error {
 	if len(user.Name) == 0 {
 		return errors.New("Invalid `Name` supplied.")
 	}
-	if len(user.Password) == 0 {
+	if user.Id == 0 && len(user.Password) == 0 {
 		return errors.New("Invalid `Password` supplied.")
 	}
 

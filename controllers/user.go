@@ -6,8 +6,54 @@ import (
 	"strconv"
 	"wantedly/api/models"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/labstack/echo"
 )
+
+// APIUserLogin checks if user exists in database and returns jwt token if valid
+func APIUserLogin(context echo.Context) error {
+	userCollection := models.UserCollection{Users: make([]models.User, 0)}
+	// err := userCollection.Login(email, password)
+	//
+	// if err != nil {
+	// 	return Return500(context, err.Error())
+	// }
+
+	return context.JSON(http.StatusOK, userCollection)
+}
+
+// APIUserRegister registers new user
+func APIUserRegister(context echo.Context) error {
+	user := &models.User{}
+
+	// Attempt to bind request to User struct
+	err := context.Bind(user)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword(user.Password, bcrypt.DefaultCost)
+	user.Password = hashedPassword
+
+	// Validate request
+	fmt.Printf("%d %s %s %s", user.Id, user.Name, user.Email, user.Password)
+	err = user.Validate()
+	if err != nil {
+		return Return400(context, err.Error())
+	}
+
+	// Save to database
+	userCollection := models.UserCollection{}
+	err = userCollection.Add(user)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	return Return201(context)
+
+	// return context.JSON(http.StatusOK, token)
+}
 
 // APIUserGetAll gets all users
 func APIUserGetAll(context echo.Context) error {
@@ -39,32 +85,6 @@ func APIUserGetById(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, user)
-}
-
-// APIUserAdd adds a new user
-func APIUserAdd(context echo.Context) error {
-	user := &models.User{}
-
-	// Attempt to bind request to User struct
-	err := context.Bind(user)
-	if err != nil {
-		return Return500(context, err.Error())
-	}
-
-	// Validate request
-	err = user.Validate()
-	if err != nil {
-		return Return400(context, err.Error())
-	}
-
-	// Save to database
-	userCollection := models.UserCollection{}
-	err = userCollection.Add(user)
-	if err != nil {
-		return Return500(context, err.Error())
-	}
-
-	return Return201(context)
 }
 
 // APIUserUpdate updates a user

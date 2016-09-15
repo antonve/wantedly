@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"wantedly/api/controllers"
+	"wantedly/api/models"
 )
 
 func main() {
@@ -34,17 +35,26 @@ func main() {
 // Define all routes here
 func setupRouting(e *echo.Echo) {
 	routesAPI := e.Group("/api")
+	// routesAPI.Post("/login", echo.HandlerFunc(controllers.APIUserLogin))
+	routesAPI.Post("/register", echo.HandlerFunc(controllers.APIUserRegister))
 
 	routesUser := routesAPI.Group("/user")
+	routesUser.Use(middleware.JWTWithConfig(getJWTConfig()))
 	routesUser.Get("", echo.HandlerFunc(controllers.APIUserGetAll))
-	routesUser.Post("", echo.HandlerFunc(controllers.APIUserAdd))
 	routesUser.Get("/:id", echo.HandlerFunc(controllers.APIUserGetById))
 	routesUser.Put("/:id", echo.HandlerFunc(controllers.APIUserUpdate))
 }
 
+func getJWTConfig() middleware.JWTConfig {
+	return middleware.JWTConfig{
+		Claims:     &models.JwtClaims{},
+		SigningKey: []byte(os.Getenv("WANTEDLY_JWT_KEY")),
+	}
+}
+
 // Serve our static assets, the JS application
 func setupStaticAssets(e *echo.Echo) {
-	staticPath := "/web"
+	staticPath := "client/web/"
 	log.Printf("Serving static files from: %v", staticPath)
 
 	// Any file we can't find we redirect to the index
