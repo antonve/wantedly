@@ -4,23 +4,58 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 	"wantedly/api/models"
 
 	"golang.org/x/crypto/bcrypt"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
 
 // APIUserLogin checks if user exists in database and returns jwt token if valid
 func APIUserLogin(context echo.Context) error {
-	userCollection := models.UserCollection{Users: make([]models.User, 0)}
-	// err := userCollection.Login(email, password)
-	//
-	// if err != nil {
-	// 	return Return500(context, err.Error())
-	// }
+	// Attempt to bind request to User struct
+	user := &models.User{}
+	err := context.Bind(user)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
 
-	return context.JSON(http.StatusOK, userCollection)
+	// Get authentication data
+	userCollection := models.UserCollection{Users: make([]models.User, 0)}
+	dbUser, err := userCollection.GetAuthenticationData(user.Email, user.Password)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	// Compare passwords
+	err = bcrypt.CompareHashAndPassword(dbUser.Password, user.Password)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	// Set custom claims
+	dbUser.Password = nil
+	claims := &models.JwtClaims{
+		dbUser,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+		},
+	}
+
+	// Create token with claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate encoded token and send it as response.
+	encodedToken, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		return err
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"token": encodedToken,
+	})
 }
 
 // APIUserRegister registers new user

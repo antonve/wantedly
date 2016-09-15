@@ -22,9 +22,7 @@ type User struct {
 
 // JwtClaims json web token claim
 type JwtClaims struct {
-	Id    uint64 `json:"id" db:"id"`
-	Email string `json:"email" db:"email"`
-	Name  string `json:"name" db:"name"`
+	User *User `json:"user"`
 	jwt.StandardClaims
 }
 
@@ -84,6 +82,31 @@ func (userCollection *UserCollection) Get(id uint64) (*User, error) {
 	}
 
 	stmt.Get(&user, id)
+
+	return &user, err
+}
+
+// GetAuthenticationData get data needed to generate jwt token
+func (userCollection *UserCollection) GetAuthenticationData(email string, password []byte) (*User, error) {
+	db := GetDatabase()
+	defer db.Close()
+
+	user := User{}
+
+	stmt, err := db.Preparex(`
+        SELECT
+            id,
+            name,
+            email,
+            password
+        FROM user
+        WHERE email = ?
+    `)
+	if err != nil {
+		return nil, err
+	}
+
+	stmt.Get(&user, email)
 
 	return &user, err
 }

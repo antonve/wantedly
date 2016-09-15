@@ -35,7 +35,7 @@ func main() {
 // Define all routes here
 func setupRouting(e *echo.Echo) {
 	routesAPI := e.Group("/api")
-	// routesAPI.Post("/login", echo.HandlerFunc(controllers.APIUserLogin))
+	routesAPI.Post("/login", echo.HandlerFunc(controllers.APIUserLogin))
 	routesAPI.Post("/register", echo.HandlerFunc(controllers.APIUserRegister))
 
 	routesUser := routesAPI.Group("/user")
