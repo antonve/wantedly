@@ -1,5 +1,5 @@
 import {
-  AUTH_LOGIN, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, AUTH_LOGIN_RESET
+  AUTH_LOGIN, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, AUTH_LOGIN_RESET, AUTH_RESET
 } from '../actions/session';
 
 const initialState = {
@@ -24,6 +24,11 @@ export default function reducer(state = initialState, action = {}) {
           currentUser: null,
           failed: true,
           errors: ["Invalid Credentials"]
+        }
+
+      case AUTH_RESET:
+        return {
+          ...initialState
         }
 
     default:

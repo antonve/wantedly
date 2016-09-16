@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
+import authActions from '../actions/session'
+
 class Header extends React.Component {
   nav() {
     return (
@@ -9,7 +11,7 @@ class Header extends React.Component {
         <ul className="menu-bar condense">
           <li><Link to="/">People</Link></li>
           <li><Link to="/">Profile</Link></li>
-          <li><Link to="/">Logout</Link></li>
+          <li><Link onClick={() => this.props.logout()}>Logout</Link></li>
         </ul>
       </nav>
     )
@@ -33,4 +35,10 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Header)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch(authActions.logout()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

@@ -22,8 +22,8 @@ const actions = {
     return (dispatch) => {
       const token = localStorage.getItem('AuthToken')
 
-      // We have no token and therefor can't load a session
       if (!token) {
+        // We have no token and therefor can't load a session
         return
       }
 
@@ -41,6 +41,7 @@ const actions = {
     return (dispatch) => {
       dispatch({type: AUTH_LOGIN})
 
+      // Login request
       const request = axios({
         method: 'post',
         data: params,
@@ -63,14 +64,23 @@ const actions = {
   },
 
   register: (params) => {
-    return (dispatch, getState) => {
-      const { session } = getState()
+    return (dispatch) => {
     }
   },
 
   logout: () => {
-    return (dispatch, getState) => {
-      const { session } = getState()
+    return (dispatch) => {
+      // Remove data from local storage
+      localStorage.removeItem('User')
+      localStorage.removeItem('AuthToken')
+
+      // Remove token from api requests
+      axios.defaults.transformRequest.push((data, headers) => {
+        headers['Authorization'] = null
+      })
+
+      dispatch(actions.reset())
+      browserHistory.push('/login');
     }
   },
 
