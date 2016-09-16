@@ -6,13 +6,29 @@ import authActions from '../actions/session'
 
 class Header extends React.Component {
   nav() {
+    const { currentUser } = this.props
+
+    let menu = (
+      <ul className="menu-bar condense">
+        <li><Link to="/">People</Link></li>
+        <li><Link to="/">Profile</Link></li>
+        <li><Link onClick={() => this.props.logout()}>Logout</Link></li>
+      </ul>
+    )
+
+    // Change menu items when we're logged out
+    if (currentUser === null) {
+      menu = (
+        <ul className="menu-bar condense">
+          <li><Link to="/login">Login</Link></li>
+          <li><Link to="/register">Register</Link></li>
+        </ul>
+      )
+    }
+
     return (
       <nav className="small-6 small-offset-4 menu-group-right">
-        <ul className="menu-bar condense">
-          <li><Link to="/">People</Link></li>
-          <li><Link to="/">Profile</Link></li>
-          <li><Link onClick={() => this.props.logout()}>Logout</Link></li>
-        </ul>
+        {menu}
       </nav>
     )
   }
