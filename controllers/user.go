@@ -27,7 +27,7 @@ func APIUserLogin(context echo.Context) error {
 	userCollection := models.UserCollection{Users: make([]models.User, 0)}
 	dbUser, err := userCollection.GetAuthenticationData(user.Email, user.Password)
 	if err != nil {
-		return Return500(context, err.Error())
+		return echo.ErrUnauthorized
 	}
 
 	// Compare passwords
@@ -54,8 +54,9 @@ func APIUserLogin(context echo.Context) error {
 		return Return500(context, err.Error())
 	}
 
-	return context.JSON(http.StatusOK, map[string]string{
+	return context.JSON(http.StatusOK, map[string]interface{}{
 		"token": encodedToken,
+		"user":  dbUser,
 	})
 }
 
