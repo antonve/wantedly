@@ -37,7 +37,6 @@ class UserList extends React.Component {
     }
 
     var data;
-    var headings;
     if (error) {
       data = (
         <div className="error-block">

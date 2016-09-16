@@ -17,7 +17,6 @@ const ROOT_URL = '/api';
 const actions = {
   fetchUsers: (params) => {
     return (dispatch, getState) => {
-      const { session } = getState()
       dispatch({type: FETCH_USERS})
 
       const request = axios({
