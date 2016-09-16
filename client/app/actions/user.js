@@ -17,7 +17,8 @@ const actions = {
       const request = axios({
         method: 'get',
         data: params,
-        url: `${ROOT_URL}/user`
+        url: `${ROOT_URL}/user`,
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
       }).then((response) => {
         dispatch({type: FETCH_USERS_SUCCESS, payload: response.data})
       }).catch((error) => {

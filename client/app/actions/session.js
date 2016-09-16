@@ -27,11 +27,6 @@ const actions = {
         return
       }
 
-      // Attach token to every request
-      axios.defaults.transformRequest.push((data, headers) => {
-        headers['Authorization'] = 'Bearer ' + token;
-      })
-
       // Dispatch success
       dispatch({type: AUTH_LOGIN_SUCCESS, payload: JSON.parse(localStorage.getItem('User'))})
     }
@@ -45,7 +40,8 @@ const actions = {
       const request = axios({
         method: 'post',
         data: params,
-        url: `${ROOT_URL}/login`
+        url: `${ROOT_URL}/login`,
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
       }).then((response) => {
         // Save token in local storage
         localStorage.setItem('AuthToken', response.data.token)
@@ -73,11 +69,6 @@ const actions = {
       // Remove data from local storage
       localStorage.removeItem('User')
       localStorage.removeItem('AuthToken')
-
-      // Remove token from api requests
-      axios.defaults.transformRequest.push((data, headers) => {
-        headers['Authorization'] = null
-      })
 
       dispatch(actions.reset())
       browserHistory.push('/login');
