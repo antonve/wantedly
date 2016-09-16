@@ -27,3 +27,4 @@ _testmain.go
 .idea
 *.iml
 error.log
+node_modules
