@@ -52,6 +52,10 @@ body
 {
   padding: 15px;
 
+  > div {
+    width: 100%;
+  }
+
   .card
   {
     > .card-divider
