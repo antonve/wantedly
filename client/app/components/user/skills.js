@@ -1,14 +1,19 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
+import Gravatar from 'react-circle-gravatar'
 
 import userActions from '../../actions/user'
 
 class UserSkills extends React.Component {
   renderUsers(skill) {
-    let rows = skill.user_ids.map((user_id, idx) => {
+    let rows = skill.users.map((user, idx) => {
       return (
-        <li>{user_id}</li>
+        <li key={user.id}>
+          <a href={`/user/${user.id}`}>
+            <Gravatar email={user.email} size={30} rating="g" default="identicon" />
+          </a>
+        </li>
       )
     })
 

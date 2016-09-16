@@ -28,23 +28,25 @@ type UserProfile struct {
 
 // Skill model
 type Skill struct {
-	ID      uint64   `json:"id"`
-	Name    string   `json:"name"`
-	Hidden  bool     `json:"hidden"`
-	UserIDs []uint64 `json:"user_ids"`
-	Count   int      `json:"count"`
+	ID     uint64 `json:"id"`
+	Name   string `json:"name"`
+	Hidden bool   `json:"hidden"`
+	Users  []User `json:"users"`
+	Count  int    `json:"count"`
 }
 
 // Local struct to scan query
 type profileRow struct {
-	ID          uint64 `db:"id"`
-	Email       string `db:"email"`
-	Name        string `db:"name"`
-	Hidden      bool   `db:"hidden"`
-	SkillID     uint64 `db:"skillId"`
-	SkillName   string `db:"skillName"`
-	OwnerUserID uint64 `db:"ownerUserId"`
-	AddedUserID uint64 `db:"addedUserId"`
+	ID             uint64 `db:"id"`
+	Email          string `db:"email"`
+	Name           string `db:"name"`
+	Hidden         bool   `db:"hidden"`
+	SkillID        uint64 `db:"skillId"`
+	SkillName      string `db:"skillName"`
+	OwnerUserID    uint64 `db:"ownerUserId"`
+	AddedUserID    uint64 `db:"addedUserId"`
+	AddedUserName  string `db:"addedUserName"`
+	AddedUserEmail string `db:"addedUserEmail"`
 }
 
 // JwtClaims json web token claim
@@ -108,12 +110,16 @@ func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 					s.name AS skillName,
 					us.addedUserId,
 					us.ownerUserId,
-					hidden
+					hidden,
+					au.name AS addedUserName,
+					au.email AS addedUserEmail
 				FROM user AS u
 				LEFT JOIN userSkill AS us
 					ON (us.ownerUserId = u.id)
 				LEFT JOIN skill AS s
 					ON (s.id = us.skillId)
+				LEFT JOIN user AS au
+					ON (au.id = us.addedUserId)
 				WHERE
 					u.id = ?
     `, id)
@@ -142,17 +148,23 @@ func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 		// Create skill if we haven't yet
 		if _, ok := userProfile.Skills[row.SkillID]; !ok {
 			userProfile.Skills[row.SkillID] = &Skill{
-				ID:      row.SkillID,
-				Name:    row.SkillName,
-				Hidden:  row.Hidden,
-				Count:   0,
-				UserIDs: make([]uint64, 0),
+				ID:     row.SkillID,
+				Name:   row.SkillName,
+				Hidden: row.Hidden,
+				Count:  0,
+				Users:  make([]User, 0),
 			}
 		}
 
 		if row.OwnerUserID != row.AddedUserID {
 			userProfile.Skills[row.SkillID].Count++
-			userProfile.Skills[row.SkillID].UserIDs = append(userProfile.Skills[row.SkillID].UserIDs, row.AddedUserID)
+
+			user := User{
+				ID:    row.AddedUserID,
+				Name:  row.AddedUserName,
+				Email: row.AddedUserEmail,
+			}
+			userProfile.Skills[row.SkillID].Users = append(userProfile.Skills[row.SkillID].Users, user)
 		}
 	}
 
