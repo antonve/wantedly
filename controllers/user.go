@@ -74,7 +74,6 @@ func APIUserRegister(context echo.Context) error {
 	user.Password = hashedPassword
 
 	// Validate request
-	fmt.Printf("%d %s %s %s", user.Id, user.Name, user.Email, user.Password)
 	err = user.Validate()
 	if err != nil {
 		return Return400(context, err.Error())
@@ -140,7 +139,7 @@ func APIUserUpdate(context echo.Context) error {
 	if err != nil {
 		return Return500(context, err.Error())
 	}
-	user.Id = id
+	user.ID = id
 
 	// Update
 	userCollection := models.UserCollection{}

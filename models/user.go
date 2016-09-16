@@ -14,7 +14,7 @@ type UserCollection struct {
 
 // User model
 type User struct {
-	Id       uint64 `json:"id" db:"id"`
+	ID       uint64 `json:"id" db:"id"`
 	Email    string `json:"email" db:"email"`
 	Name     string `json:"name" db:"name"`
 	Password []byte `json:"password" db:"password"`
@@ -28,23 +28,23 @@ type UserProfile struct {
 
 // Skill model
 type Skill struct {
-	Id      uint64   `json:"id"`
+	ID      uint64   `json:"id"`
 	Name    string   `json:"name"`
 	Hidden  bool     `json:"hidden"`
-	UserIds []uint64 `json:"user_ids"`
+	UserIDs []uint64 `json:"user_ids"`
 	Count   int      `json:"count"`
 }
 
 // Local struct to scan query
 type profileRow struct {
-	Id          uint64 `db:"id"`
+	ID          uint64 `db:"id"`
 	Email       string `db:"email"`
 	Name        string `db:"name"`
 	Hidden      bool   `db:"hidden"`
-	SkillId     uint64 `db:"skillId"`
+	SkillID     uint64 `db:"skillId"`
 	SkillName   string `db:"skillName"`
-	OwnerUserId uint64 `db:"ownerUserId"`
-	AddedUserId uint64 `db:"addedUserId"`
+	OwnerUserID uint64 `db:"ownerUserId"`
+	AddedUserID uint64 `db:"addedUserId"`
 }
 
 // JwtClaims json web token claim
@@ -66,7 +66,7 @@ func (user *User) Validate() error {
 	if len(user.Name) == 0 {
 		return errors.New("Invalid `Name` supplied.")
 	}
-	if user.Id == 0 && len(user.Password) == 0 {
+	if user.ID == 0 && len(user.Password) == 0 {
 		return errors.New("Invalid `Password` supplied.")
 	}
 
@@ -133,26 +133,26 @@ func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 		// Create user if we haven't yet
 		if userProfile.User == nil {
 			userProfile.User = &User{
-				Id:    row.Id,
+				ID:    row.ID,
 				Email: row.Email,
 				Name:  row.Name,
 			}
 		}
 
 		// Create skill if we haven't yet
-		if _, ok := userProfile.Skills[row.SkillId]; !ok {
-			userProfile.Skills[row.SkillId] = &Skill{
-				Id:      row.SkillId,
+		if _, ok := userProfile.Skills[row.SkillID]; !ok {
+			userProfile.Skills[row.SkillID] = &Skill{
+				ID:      row.SkillID,
 				Name:    row.SkillName,
 				Hidden:  row.Hidden,
 				Count:   0,
-				UserIds: make([]uint64, 0),
+				UserIDs: make([]uint64, 0),
 			}
 		}
 
-		if row.OwnerUserId != row.AddedUserId {
-			userProfile.Skills[row.SkillId].Count++
-			userProfile.Skills[row.SkillId].UserIds = append(userProfile.Skills[row.SkillId].UserIds, row.AddedUserId)
+		if row.OwnerUserID != row.AddedUserID {
+			userProfile.Skills[row.SkillID].Count++
+			userProfile.Skills[row.SkillID].UserIDs = append(userProfile.Skills[row.SkillID].UserIDs, row.AddedUserID)
 		}
 	}
 
@@ -220,7 +220,7 @@ func (userCollection *UserCollection) Update(user *User) error {
 
 	rows, err := result.RowsAffected()
 	if rows == 0 {
-		err = fmt.Errorf("No user found with id %v", user.Id)
+		err = fmt.Errorf("No user found with id %v", user.ID)
 	}
 
 	return err
