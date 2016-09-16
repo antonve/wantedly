@@ -41,7 +41,7 @@ func setupRouting(e *echo.Echo) {
 	routesUser := routesAPI.Group("/user")
 	routesUser.Use(middleware.JWTWithConfig(getJWTConfig()))
 	routesUser.Get("", echo.HandlerFunc(controllers.APIUserGetAll))
-	routesUser.Get("/:id", echo.HandlerFunc(controllers.APIUserGetById))
+	routesUser.Get("/:id", echo.HandlerFunc(controllers.APIUserGetByID))
 	routesUser.Put("/:id", echo.HandlerFunc(controllers.APIUserUpdate))
 }
 

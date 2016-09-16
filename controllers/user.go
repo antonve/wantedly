@@ -104,24 +104,25 @@ func APIUserGetAll(context echo.Context) error {
 	return context.JSON(http.StatusOK, userCollection)
 }
 
-// APIUserGetById gets a user
-func APIUserGetById(context echo.Context) error {
-	userCollection := models.UserCollection{Users: make([]models.User, 0)}
+// APIUserGetByID get the profile of a user
+func APIUserGetByID(context echo.Context) error {
+	userCollection := models.UserCollection{}
 
 	id, err := strconv.ParseUint(context.Param("id"), 10, 64)
 	if err != nil {
 		return Return500(context, err.Error())
 	}
 
-	user, err := userCollection.Get(id)
+	userProfile, err := userCollection.Get(id)
 	if err != nil {
 		return Return500(context, err.Error())
 	}
-	if user.Id == 0 {
+
+	if userProfile.User == nil {
 		return Return404(context, fmt.Sprintf("No User found with id %v", id))
 	}
 
-	return context.JSON(http.StatusOK, user)
+	return context.JSON(http.StatusOK, userProfile)
 }
 
 // APIUserUpdate updates a user

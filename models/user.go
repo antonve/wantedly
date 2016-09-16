@@ -20,6 +20,33 @@ type User struct {
 	Password []byte `json:"password" db:"password"`
 }
 
+// UserProfile model
+type UserProfile struct {
+	User   *User             `json:"user"`
+	Skills map[uint64]*Skill `json:"skills"`
+}
+
+// Skill model
+type Skill struct {
+	Id      uint64   `json:"id"`
+	Name    string   `json:"name"`
+	Hidden  bool     `json:"hidden"`
+	UserIds []uint64 `json:"user_ids"`
+	Count   int      `json:"count"`
+}
+
+// Local struct to scan query
+type profileRow struct {
+	Id          uint64 `db:"id"`
+	Email       string `db:"email"`
+	Name        string `db:"name"`
+	Hidden      bool   `db:"hidden"`
+	SkillId     uint64 `db:"skillId"`
+	SkillName   string `db:"skillName"`
+	OwnerUserId uint64 `db:"ownerUserId"`
+	AddedUserId uint64 `db:"addedUserId"`
+}
+
 // JwtClaims json web token claim
 type JwtClaims struct {
 	User *User `json:"user"`
@@ -62,28 +89,74 @@ func (userCollection *UserCollection) GetAll() error {
 	return err
 }
 
-// Get a user by id
-func (userCollection *UserCollection) Get(id uint64) (*User, error) {
+// Get a user profile by id
+func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 	db := GetDatabase()
 	defer db.Close()
 
-	user := User{}
+	// Init profile
+	userProfile := UserProfile{}
+	userProfile.Skills = make(map[uint64]*Skill)
 
-	stmt, err := db.Preparex(`
-        SELECT
-            id,
-            name,
-            email
-        FROM user
-        WHERE id = ?
-    `)
+	// Query all skill entries
+	rows, err := db.Queryx(`
+				SELECT
+					u.id,
+					u.email,
+					u.name,
+					s.id AS skillId,
+					s.name AS skillName,
+					us.addedUserId,
+					us.ownerUserId,
+					hidden
+				FROM user AS u
+				LEFT JOIN userSkill AS us
+					ON (us.ownerUserId = u.id)
+				LEFT JOIN skill AS s
+					ON (s.id = us.skillId)
+				WHERE
+					u.id = ?
+    `, id)
 	if err != nil {
 		return nil, err
 	}
 
-	stmt.Get(&user, id)
+	// Iterate over all loops and build user profile
+	for rows.Next() {
+		var row profileRow
+		err = rows.StructScan(&row)
 
-	return &user, err
+		if err != nil {
+			return nil, err
+		}
+
+		// Create user if we haven't yet
+		if userProfile.User == nil {
+			userProfile.User = &User{
+				Id:    row.Id,
+				Email: row.Email,
+				Name:  row.Name,
+			}
+		}
+
+		// Create skill if we haven't yet
+		if _, ok := userProfile.Skills[row.SkillId]; !ok {
+			userProfile.Skills[row.SkillId] = &Skill{
+				Id:      row.SkillId,
+				Name:    row.SkillName,
+				Hidden:  row.Hidden,
+				Count:   0,
+				UserIds: make([]uint64, 0),
+			}
+		}
+
+		if row.OwnerUserId != row.AddedUserId {
+			userProfile.Skills[row.SkillId].Count++
+			userProfile.Skills[row.SkillId].UserIds = append(userProfile.Skills[row.SkillId].UserIds, row.AddedUserId)
+		}
+	}
+
+	return &userProfile, nil
 }
 
 // GetAuthenticationData get data needed to generate jwt token
