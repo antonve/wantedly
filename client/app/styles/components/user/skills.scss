@@ -65,6 +65,15 @@
         font-weight: bold;
       }
 
+      .skill-hide
+      {
+        padding-right: 3px;
+        font-size: 30px;
+        line-height: 35px;
+        font-weight: bold;
+        color: $alert-color;
+      }
+
       .skill-user-list
       {
         list-style-type: none;

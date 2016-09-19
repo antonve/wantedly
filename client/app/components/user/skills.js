@@ -12,7 +12,8 @@ class UserSkills extends React.Component {
     super(props)
 
     this.state = {
-      addSkillModalShown: false
+      addSkillModalShown: false,
+      showHideSkillButtons: false,
     }
   }
 
@@ -63,14 +64,40 @@ class UserSkills extends React.Component {
 
   showAddSkillModal() {
     this.setState({
+      ...this.state,
       addSkillModalShown: true
     })
   }
 
   hideAddSkillModal() {
     this.setState({
+      ...this.state,
       addSkillModalShown: false
     })
+  }
+
+  // Handlers
+
+  showHideSkillButtons() {
+    this.setState({
+      ...this.state,
+      showHideSkillButtons: true
+    })
+  }
+
+  hideHideSkillButtons() {
+    this.setState({
+      ...this.state,
+      showHideSkillButtons: false
+    })
+  }
+
+  toggleHideSkillButtons() {
+    if (this.state.showHideSkillButtons) {
+      this.hideHideSkillButtons()
+    } else {
+      this.showHideSkillButtons()
+    }
   }
 
   // Rendering
@@ -127,9 +154,10 @@ class UserSkills extends React.Component {
 
         return (
           <li key={skill.id} className={`skill-list-item grid-block ` + (isExpanded ? '' : 'shrink')}>
-            <a href="" className={`skill-count grid-block shrink ` + (isActive ? 'active' : '')}>
+            <a href="" className={`skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (this.state.showHideSkillButtons ? 'hidden' : '')}>
               {skill.count}
             </a>
+            <Link className={`skill-hide ` + (this.state.showHideSkillButtons ? '' : 'hidden')} onClick={() => this.showHideSkillButtons() }><i className="fa fa-trash" aria-hidden="true"></i></Link>
             <span className={`skill-title ` + (isExpanded ? 'grid-block' : '')}>
               {skill.name}
             </span>
@@ -141,6 +169,17 @@ class UserSkills extends React.Component {
   }
 
   render() {
+    const { user, currentUser } = this.props
+    let hideButton
+
+    if (currentUser.id === user.id) {
+      hideButton = (
+        <Link onClick={() => this.toggleHideSkillButtons()} className="button warning">
+          <i className="fa fa-trash" aria-hidden="true"></i> {this.state.showHideSkillButtons ? 'Done hiding skills' : 'Hide skills'}
+        </Link>
+      )
+    }
+
     return (
       <div className="skills">
         {this.renderAddSkillModal()}
@@ -148,10 +187,11 @@ class UserSkills extends React.Component {
           <h2 className="small-4">
             Skills
           </h2>
-          <div className="small-8">
-            <Link onClick={() => this.showAddSkillModal()} className="button pull-right">
+          <div className="small-8 text-right">
+            <Link onClick={() => this.showAddSkillModal()} className="button">
               <i className="fa fa-plus" aria-hidden="true"></i> Add a skill
             </Link>
+            {hideButton}
           </div>
         </div>
 
