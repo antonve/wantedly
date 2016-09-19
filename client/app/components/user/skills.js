@@ -4,6 +4,7 @@ import { Link, browserHistory } from 'react-router'
 import Gravatar from 'react-circle-gravatar'
 
 import userActions from '../../actions/user'
+import '../../styles/components/user/skills.scss'
 
 class UserSkills extends React.Component {
   renderUsers(skill) {
@@ -11,14 +12,14 @@ class UserSkills extends React.Component {
       return (
         <li key={user.id}>
           <a href={`/user/${user.id}`}>
-            <Gravatar email={user.email} size={30} rating="g" default="identicon" />
+            <Gravatar email={user.email} size={35} rating="g" default="identicon" />
           </a>
         </li>
       )
     })
 
     return (
-      <ul>
+      <ul className="grid-block small-6 skill-user-list">
         {rows}
       </ul>
     )
@@ -32,9 +33,9 @@ class UserSkills extends React.Component {
         let skill = skills[key]
 
         return (
-          <li key={skill.id} className={idx < 6 ? 'expanded' : ''}>
-            <Link>{skill.count}</Link>
-            <span>{skill.name}</span>
+          <li key={skill.id} className={`skill-list-item grid-block ` + (idx < 6 ? '' : 'shrink')}>
+            <a href="" className="skill-count grid-block shrink">{skill.count}</a>
+            <span className={`skill-title ` + (idx < 6 ? 'grid-block small-5' : '')}>{skill.name}</span>
             {idx < 6 ? this.renderUsers(skill) : ''}
           </li>
         )
