@@ -29,18 +29,25 @@ class UserSkills extends React.Component {
     return (
       <Modal modalMode={SHOW_MODAL} closeOnBackgroundMode={CLOSE_ON_BACKGROUND}>
         <div>
-          <div>
+          <form className="skill-add-form">
+            <input type="text" placeholder="Type skill here..." />
             <button type="button" className="button alert">Add skill</button>
-            <button type="button" className="button">Cancel</button>
-          </div>
+            <button type="button" onClick={() => this.hideAddSkillModal()} className="button">Cancel</button>
+          </form>
         </div>
       </Modal>
     )
   }
 
-  onAddSkillClick() {
+  showAddSkillModal() {
     this.setState({
       addSkillModalShown: true
+    })
+  }
+
+  hideAddSkillModal() {
+    this.setState({
+      addSkillModalShown: false
     })
   }
 
@@ -117,7 +124,7 @@ class UserSkills extends React.Component {
             Skills
           </h2>
           <div className="small-8">
-            <Link onClick={() => this.onAddSkillClick()} className="button pull-right">
+            <Link onClick={() => this.showAddSkillModal()} className="button pull-right">
               <i className="fa fa-plus" aria-hidden="true"></i> Add a skill
             </Link>
           </div>

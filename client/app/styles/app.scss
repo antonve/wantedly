@@ -169,3 +169,7 @@ body
     cursor: default;
   }
 }
+
+.button + .button {
+  margin-left: 15px;
+}
