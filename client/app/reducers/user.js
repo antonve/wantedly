@@ -1,7 +1,7 @@
 import {
   FETCH_USERS, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE, FETCH_USERS_RESET,
   FETCH_USER_PROFILE, FETCH_USER_PROFILE_SUCCESS, FETCH_USER_PROFILE_FAILURE, FETCH_USER_PROFILE_RESET,
-  ADD_USER_PROFILE, ADD_USER_PROFILE_SUCCESS, ADD_USER_PROFILE_FAILURE, ADD_USER_PROFILE_RESET,
+  USER_PROFILE_ADD_SKILL, USER_PROFILE_ADD_SKILL_SUCCESS, USER_PROFILE_ADD_SKILL_FAILURE, USER_PROFILE_ADD_SKILL_RESET,
 } from '../actions/user';
 
 
@@ -81,21 +81,21 @@ export default function(state = initialState, action) {
       };
 
     // Post the new skill and set loading = true
-    case ADD_USER_PROFILE:
+    case USER_PROFILE_ADD_SKILL:
       return {
         ...state,
         addSkill: { success: false, error: null, loading: true }
       };
 
     // Return list of user profile and make loading = false
-    case ADD_USER_PROFILE_SUCCESS:
+    case USER_PROFILE_ADD_SKILL_SUCCESS:
       return {
         ...state,
         addSkill: { success: true, error: null, loading: false }
       };
 
     // Return error and make loading = false
-    case ADD_USER_PROFILE_FAILURE:
+    case USER_PROFILE_ADD_SKILL_FAILURE:
       // Second one is network or server down errors
       error = payload.data || { message: payload.message };
 
@@ -105,7 +105,7 @@ export default function(state = initialState, action) {
       };
 
     // Reset userProfile to initial state
-    case ADD_USER_PROFILE_RESET:
+    case USER_PROFILE_ADD_SKILL_RESET:
       return {
         ...state,
         addSkill: initialState.addSkill

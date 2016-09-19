@@ -6,17 +6,17 @@ export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS'
 export const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE'
 export const FETCH_USERS_RESET = 'FETCH_USERS_RESET'
 
-// User list
+// User profile
 export const FETCH_USER_PROFILE = 'FETCH_USER_PROFILE'
 export const FETCH_USER_PROFILE_SUCCESS = 'FETCH_USER_PROFILE_SUCCESS'
 export const FETCH_USER_PROFILE_FAILURE = 'FETCH_USER_PROFILE_FAILURE'
 export const FETCH_USER_PROFILE_RESET = 'FETCH_USER_PROFILE_RESET'
 
-// User list
-export const ADD_USER_PROFILE = 'ADD_USER_PROFILE'
-export const ADD_USER_PROFILE_SUCCESS = 'ADD_USER_PROFILE_SUCCESS'
-export const ADD_USER_PROFILE_FAILURE = 'ADD_USER_PROFILE_FAILURE'
-export const ADD_USER_PROFILE_RESET = 'ADD_USER_PROFILE_RESET'
+// User profile add skill
+export const USER_PROFILE_ADD_SKILL = 'USER_PROFILE_ADD_SKILL'
+export const USER_PROFILE_ADD_SKILL_SUCCESS = 'USER_PROFILE_ADD_SKILL_SUCCESS'
+export const USER_PROFILE_ADD_SKILL_FAILURE = 'USER_PROFILE_ADD_SKILL_FAILURE'
+export const USER_PROFILE_ADD_SKILL_RESET = 'USER_PROFILE_ADD_SKILL_RESET'
 
 
 const ROOT_URL = '/api';
@@ -74,7 +74,7 @@ const actions = {
 
   addUserSkill: (params) => {
     return (dispatch) => {
-      dispatch({type: ADD_USER_PROFILE})
+      dispatch({type: USER_PROFILE_ADD_SKILL})
 
       // Login request
       const request = axios({
@@ -83,9 +83,9 @@ const actions = {
         url: `${ROOT_URL}/skill`,
         headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
       }).then((response) => {
-        dispatch({type: ADD_USER_PROFILE_SUCCESS})
+        dispatch({type: USER_PROFILE_ADD_SKILL_SUCCESS})
       }).catch((error) => {
-        dispatch({type: ADD_USER_PROFILE_FAILURE, payload: error})
+        dispatch({type: USER_PROFILE_ADD_SKILL_FAILURE, payload: error})
       })
 
     }
@@ -94,7 +94,7 @@ const actions = {
   resetAddUserSkill: () => {
     return (dispatch) => {
       dispatch({
-        type: ADD_USER_PROFILE_RESET
+        type: USER_PROFILE_ADD_SKILL_RESET
       })
     }
   },
