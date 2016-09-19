@@ -100,10 +100,20 @@ class UserSkills extends React.Component {
     }
   }
 
-  handleSkillClick(skill, currentUser, user) {
+  handleSkillClick(skill, user, currentStatus) {
+    const { currentUser, dispatch } = this.props
+
+    // Ignore clicks on our own profile
     if (currentUser.id === user.id) {
       return null
     }
+
+    // Handle clicks on other profiles
+    dispatch(userActions.toggleUserSkill({
+      "user_id": user.id,
+      "skill_id": skill.id,
+      "status": !currentStatus
+    }))
   }
 
   // Rendering
@@ -167,7 +177,7 @@ class UserSkills extends React.Component {
 
         return (
           <li key={skill.id} className={`skill-list-item grid-block ` + (isExpanded ? '' : 'shrink ') + 'hide-skill-buttons-' + (this.state.showHideSkillButtons ? 'active' : 'disabled')}>
-            <Link onClick={() => this.handleSkillClick(skill, currentUser, user)} className={`skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (isOwner ? 'disabled' : '')}>
+            <Link onClick={() => this.handleSkillClick(skill, user, isActive)} className={`skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (isOwner ? 'disabled' : '')}>
               {skill.count}
               {!isOwner ? (isActive ? minusButton : plusButton) : ''}
             </Link>

@@ -69,17 +69,23 @@
         text-align: center;
         position: relative;
 
-        &.active
-        {
-          border-color: $primary-color;
-          background-color: $primary-color;
-          color: $dark-color;
-        }
-
         &:hover:not(.disabled)
         {
           background-color: $gray;
           color: black;
+        }
+
+        &.active
+        {
+          border-color: $primary-color;
+          background-color: $primary-color;
+          color: $gray-light;
+
+          &:hover:not(.disabled)
+          {
+            background-color: lighten($primary-color, 15%);
+            color: $gray-light;
+          }
         }
 
         &.disabled
