@@ -19,6 +19,12 @@
     {
       margin-bottom: 5px;
 
+      // Show hidden skill when changing visibility
+      &.hidden-skill:not(.hide-skill-buttons-active) {
+        display: none;
+      }
+
+      // Show trash/revert button when active
       &.hide-skill-buttons-active
       {
         .skill-count
@@ -30,8 +36,28 @@
         {
           display: block;
         }
+
+        .skill-show-button
+        {
+          display: none;
+        }
+
+        &.hidden-skill
+        {
+          .skill-hide-button
+          {
+            display: none;
+          }
+
+          .skill-show-button
+          {
+            display: block;
+          }
+        }
+
       }
 
+      // Show counter when disabled
       &.hide-skill-buttons-disabled
       {
         .skill-count
@@ -40,6 +66,11 @@
         }
 
         .skill-hide-button
+        {
+          display: none;
+        }
+
+        .skill-show-button
         {
           display: none;
         }
@@ -136,6 +167,15 @@
         line-height: 35px;
         font-weight: bold;
         color: $alert-color;
+      }
+
+      .skill-show-button
+      {
+        padding-right: 3px;
+        font-size: 30px;
+        line-height: 35px;
+        font-weight: bold;
+        color: $success-color;
       }
 
       .skill-user-list

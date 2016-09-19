@@ -186,9 +186,10 @@ class UserSkills extends React.Component {
         const currentCounterButton = !isOwner ? (isActive ? minusButton : plusButton) : ''
 
         // Classes
-        const hideHideSkillButtonsClass = 'hide-skill-buttons-' + (this.state.showHideSkillButtons ? 'active' : 'disabled')
+        const hideSkillButtonsClass = 'hide-skill-buttons-' + (this.state.showHideSkillButtons ? 'active' : 'disabled')
         const sizeClass = (isExpanded ? '' : 'shrink ')
-        const liClasses = `skill-list-item grid-block ${sizeClass} ${hideHideSkillButtonsClass}`
+        const hiddenSkillClass = skill.hidden ? 'hidden-skill' : ''
+        const liClasses = `skill-list-item grid-block ${sizeClass} ${hideSkillButtonsClass} ${hiddenSkillClass}`
         const titleClasses = `skill-title ` + (isExpanded ? 'grid-block' : '')
         const counterClasses = `skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (isOwner ? 'disabled' : '')
 
@@ -201,8 +202,11 @@ class UserSkills extends React.Component {
               {skill.count}
               {currentCounterButton}
             </Link>
-            <Link className={`skill-hide-button`} onClick={() => this.showHideSkillButtons() }>
+            <Link className={`skill-hide-button`} onClick={() => this.hideSkill(skill.id) }>
               <i className="fa fa-trash" aria-hidden="true"></i>
+            </Link>
+            <Link className={`skill-show-button`} onClick={() => this.showSkill(skill.id) }>
+              <i className="fa fa-undo" aria-hidden="true"></i>
             </Link>
             <span className={titleClasses}>
               {skill.name}
@@ -221,7 +225,7 @@ class UserSkills extends React.Component {
     if (currentUser.id === user.id) {
       hideButton = (
         <Link onClick={() => this.toggleHideSkillButtons()} className="button warning">
-          <i className="fa fa-trash" aria-hidden="true"></i> {this.state.showHideSkillButtons ? 'Done hiding skills' : 'Hide skills'}
+          <i className="fa fa-trash" aria-hidden="true"></i> {this.state.showHideSkillButtons ? 'Finish updating visibility' : 'Update visibility'}
         </Link>
       )
     }
