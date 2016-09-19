@@ -48,8 +48,8 @@ class UserSkills extends React.Component {
     return (
       <Modal modalMode={SHOW_MODAL} closeOnBackgroundMode={CLOSE_ON_BACKGROUND}>
         <div>
-          <form className="skill-add-form">
-            <input ref="modalSkillName" type="text" placeholder="Type skill here..." />
+          <form onSubmit={() => {this.addSkill()}} className="skill-add-form">
+            <input ref="modalSkillName" type="text" placeholder="Type skill here..." autoFocus={true} />
             <button type="button" onClick={() => this.addSkill()} className="button alert">Add skill</button>
             <button type="button" onClick={() => this.hideAddSkillModal()} className="button">Cancel</button>
           </form>
