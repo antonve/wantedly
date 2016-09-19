@@ -4,19 +4,25 @@ import { browserHistory } from 'react-router'
 
 import authActions from '../../actions/session'
 
-class AuthLogin extends React.Component {
+class AuthRegister extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props
 
     this.checkIfLoggedIn()
 
-    this.refs.email.focus();
+    this.refs.name.focus();
 
     dispatch(authActions.reset())
   }
 
   componentWillReceiveProps(nextProps) {
     this.checkIfLoggedIn()
+
+    // Auto login user after registering
+    if (nextProps.registered === true) {
+      const { dispatch } = this.props
+      dispatch(authActions.login(nextProps.registerData))
+    }
   }
 
   checkIfLoggedIn() {
@@ -28,23 +34,24 @@ class AuthLogin extends React.Component {
   handleAuth(e) {
     e.preventDefault()
 
-    const { email, password } = this.refs
+    const { email, password, name } = this.refs
     const { dispatch } = this.props
     const params = {
+      name: name.value,
       email: email.value,
       password: password.value
     }
 
-    dispatch(authActions.login(params))
+    dispatch(authActions.register(params))
   }
 
   errors() {
-    const { failed } = this.props
+    const { failed, error } = this.props
 
     if (failed) {
       return (
         <div>
-          Invalid Credentials
+          {error}
         </div>
       )
     }
@@ -56,10 +63,17 @@ class AuthLogin extends React.Component {
     return (
       <form onSubmit={::this.handleAuth}>
         {::this.errors()}
+        <label>Name</label>
+        <input
+          ref="name"
+          type="text"
+          placeholder="Name"
+          required={true}
+        />
         <label>Email</label>
         <input
           ref="email"
-          type="text"
+          type="email"
           placeholder="Email"
           required={true}
         />
@@ -70,7 +84,7 @@ class AuthLogin extends React.Component {
           placeholder="Password"
           required={true}
         />
-        <button type="submit" className="button">Log In</button>
+        <button type="submit" className="button">Register</button>
       </form>
     )
   }
@@ -82,4 +96,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(AuthLogin)
+export default connect(mapStateToProps)(AuthRegister)

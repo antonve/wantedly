@@ -40,8 +40,7 @@ const actions = {
       const request = axios({
         method: 'post',
         data: params,
-        url: `${ROOT_URL}/login`,
-        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
+        url: `${ROOT_URL}/login`
       }).then((response) => {
         // Save token in local storage
         localStorage.setItem('AuthToken', response.data.token)
@@ -55,12 +54,23 @@ const actions = {
       }).catch((error) => {
         dispatch({type: AUTH_LOGIN_FAILURE, payload: error})
       })
-
     }
   },
 
   register: (params) => {
     return (dispatch) => {
+      dispatch({type: AUTH_REGISTER})
+
+      // Login request
+      const request = axios({
+        method: 'post',
+        data: params,
+        url: `${ROOT_URL}/register`
+      }).then((response) => {
+        dispatch({type: AUTH_REGISTER_SUCCESS, payload: params})
+      }).catch((error) => {
+        dispatch({type: AUTH_REGISTER_FAILURE, payload: error})
+      })
     }
   },
 

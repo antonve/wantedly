@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
-import UserLoginFormContainer from '../../components/auth/login'
+import UserRegisterFormContainer from '../../components/auth/register'
 
-class UserLogin extends Component {
+class UserRegister extends Component {
   render() {
     return (
       <div className="card small-12">
         <div className="card-divider grid-block">
-          <div className="small-12">Log in</div>
+          <div className="small-3">Register</div>
         </div>
         <div className="card-section">
-          <UserLoginFormContainer />
+          <UserRegisterFormContainer />
         </div>
       </div>
     );
@@ -18,4 +18,4 @@ class UserLogin extends Component {
 }
 
 
-export default UserLogin;
+export default UserRegister;
