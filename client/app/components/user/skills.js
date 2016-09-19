@@ -9,6 +9,10 @@ import '../../styles/components/user/skills.scss'
 class UserSkills extends React.Component {
   renderUsers(skill) {
     let rows = skill.users.map((user, idx) => {
+      if (idx >= 10) {
+        return false
+      }
+
       return (
         <li key={user.id}>
           <a href={`/user/${user.id}`}>
@@ -19,7 +23,7 @@ class UserSkills extends React.Component {
     })
 
     return (
-      <ul className="grid-block small-6 skill-user-list">
+      <ul className="grid-block small-6 skill-user-list align-right">
         {rows}
       </ul>
     )
@@ -35,7 +39,7 @@ class UserSkills extends React.Component {
         return (
           <li key={skill.id} className={`skill-list-item grid-block ` + (idx < 6 ? '' : 'shrink')}>
             <a href="" className="skill-count grid-block shrink">{skill.count}</a>
-            <span className={`skill-title ` + (idx < 6 ? 'grid-block small-5' : '')}>{skill.name}</span>
+            <span className={`skill-title ` + (idx < 6 ? 'grid-block' : '')}>{skill.name}</span>
             {idx < 6 ? this.renderUsers(skill) : ''}
           </li>
         )
