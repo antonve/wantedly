@@ -37,13 +37,7 @@ class UserList extends React.Component {
     }
 
     var data;
-    if (error) {
-      data = (
-        <div className="error-block">
-          <span className="alert label">Error: We couldnt connect to server.</span>
-        </div>
-      )
-    } else {
+    if (!error) {
       data = (
         <section className="block-list">
           <ul>
@@ -53,7 +47,14 @@ class UserList extends React.Component {
       )
     }
 
-    return data
+    return (
+      <div>
+        <div className={`notification error ${error ? '' : 'hidden'}`}>
+          Error: We couldnt connect to server.
+        </div>
+        {data}
+      </div>
+      )
   }
 }
 

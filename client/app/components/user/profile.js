@@ -16,29 +16,30 @@ class UserProfile extends React.Component {
   render() {
     const { loading, user, skills, error } = this.props.userProfile
 
-    if (loading || !user) {
+    if (loading) {
       return null
     }
 
     var data;
-    if (error) {
+    if (!error && user !== null) {
       data = (
-        <div className="error-block">
-          <span className="alert label">Error: We couldnt connect to server.</span>
+        <div className="card small-12">
+          <div className="card-divider">
+            {user.name}
+          </div>
+          <div className="card-section">
+            <UserSkillsComponent user={user} skills={skills} />
+          </div>
         </div>
       )
-    } else {
-      data = <UserSkillsContainer user={user} skills={skills} />
     }
 
     return (
-      <div className="card small-12">
-        <div className="card-divider">
-          {user.name}
+      <div>
+        <div className={`notification error ${error ? '' : 'hidden'}`}>
+          Error: We couldnt connect to server.
         </div>
-        <div className="card-section">
-          {data}
-        </div>
+        {data}
       </div>
     )
   }
