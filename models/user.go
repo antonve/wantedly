@@ -26,15 +26,6 @@ type UserProfile struct {
 	Skills map[uint64]*Skill `json:"skills"`
 }
 
-// Skill model
-type Skill struct {
-	ID     uint64 `json:"id"`
-	Name   string `json:"name"`
-	Hidden bool   `json:"hidden"`
-	Users  []User `json:"users"`
-	Count  int    `json:"count"`
-}
-
 // Local struct to scan query
 type profileRow struct {
 	ID             uint64 `db:"id"`
