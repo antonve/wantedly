@@ -71,7 +71,22 @@ class UserSkills extends React.Component {
   }
 
   renderSkills() {
-    const { user, skills } = this.props
+    const { user, skills, currentUser } = this.props
+
+    // Try to convince the user to add some skills if we don't have any yet
+    if (Object.keys(skills).length === 0) {
+      // Change message depending on the currentUser
+      let message = `${user.name} has no skills added to their profile yet`
+      if (user.id === currentUser.id) {
+        message = 'You have no skills added to your profile yet';
+      }
+
+      return (
+        <div>
+          {message}, why not <Link onClick={() => this.onAddSkillClick() }>add some</Link>?
+        </div>
+      )
+    }
 
     return (
       Object.keys(skills).map((key, idx) => {

@@ -15,6 +15,7 @@ class UserProfile extends React.Component {
 
   render() {
     const { loading, user, skills, error } = this.props.userProfile
+    const { currentUser } = this.props.session
 
     if (loading) {
       return null
@@ -28,7 +29,7 @@ class UserProfile extends React.Component {
             {user.name}
           </div>
           <div className="card-section">
-            <UserSkillsComponent user={user} skills={skills} />
+            <UserSkillsComponent user={user} skills={skills} currentUser={currentUser} />
           </div>
         </div>
       )
