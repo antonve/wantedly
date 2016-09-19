@@ -162,11 +162,14 @@ class UserSkills extends React.Component {
         const isExpanded = (idx < 6)
         const isActive = skill.users[currentUser.id] !== undefined
         const isOwner = currentUser.id === user.id
+        const minusButton = <i className="fa fa-minus skill-minus" aria-hidden="true"></i>
+        const plusButton = <i className="fa fa-plus skill-plus" aria-hidden="true"></i>
 
         return (
           <li key={skill.id} className={`skill-list-item grid-block ` + (isExpanded ? '' : 'shrink ') + 'hide-skill-buttons-' + (this.state.showHideSkillButtons ? 'active' : 'disabled')}>
             <Link onClick={() => this.handleSkillClick(skill, currentUser, user)} className={`skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (isOwner ? 'disabled' : '')}>
               {skill.count}
+              {!isOwner ? (isActive ? minusButton : plusButton) : ''}
             </Link>
             <Link className={`skill-hide-button`} onClick={() => this.showHideSkillButtons() }><i className="fa fa-trash" aria-hidden="true"></i></Link>
             <span className={`skill-title ` + (isExpanded ? 'grid-block' : '')}>
