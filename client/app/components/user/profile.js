@@ -7,6 +7,18 @@ import UserSkillsComponent from './skills'
 
 class UserProfile extends React.Component {
   componentDidMount() {
+    this.fetchUserProfile()
+  }
+
+  componentDidUpdate() {
+    // Fetch new data if we received a new user id
+    if (this.props.userProfile.user !== null
+        && this.props.userId != this.props.userProfile.user.id) {
+      this.fetchUserProfile()
+    }
+  }
+
+  fetchUserProfile() {
     const { dispatch } = this.props
 
     // Fetch the profile data from the API
