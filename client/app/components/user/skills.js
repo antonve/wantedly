@@ -225,9 +225,9 @@ class UserSkills extends React.Component {
             <Link className={`skill-show-button`} onClick={() => this.toggleSkillVisibility(skill, true) }>
               <i className="fa fa-undo" aria-hidden="true"></i>
             </Link>
-            <span className={titleClasses}>
+            <Link className={titleClasses} to={`/skill/${skill.id}`}>
               {skill.name}
-            </span>
+            </Link>
             {users}
           </li>
         )

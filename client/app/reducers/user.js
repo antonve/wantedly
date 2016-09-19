@@ -1,5 +1,6 @@
 import {
   FETCH_USERS, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE, FETCH_USERS_RESET,
+  FETCH_USERS_WITH_SKILL, FETCH_USERS_WITH_SKILL_SUCCESS, FETCH_USERS_WITH_SKILL_FAILURE, FETCH_USERS_WITH_SKILL_RESET,
   FETCH_USER_PROFILE, FETCH_USER_PROFILE_SUCCESS, FETCH_USER_PROFILE_FAILURE, FETCH_USER_PROFILE_RESET,
   USER_PROFILE_ADD_SKILL, USER_PROFILE_ADD_SKILL_SUCCESS, USER_PROFILE_ADD_SKILL_FAILURE, USER_PROFILE_ADD_SKILL_RESET,
   USER_PROFILE_TOGGLE_SKILL, USER_PROFILE_TOGGLE_SKILL_SUCCESS, USER_PROFILE_TOGGLE_SKILL_FAILURE, USER_PROFILE_TOGGLE_SKILL_RESET,
@@ -9,10 +10,11 @@ import {
 
 const initialState = {
   userList: { users: [], error: null, loading: false },
+  userWithSkillList: { skillId: null, users: [], error: null, loading: false },
   userProfile: { user: null, skills: [], error: null, loading: false },
   addSkill: { success: false, error: null, loading: false },
   toggleSkill: { success: false, error: null, loading: false },
-  toggleSkillVisibility: { skillId: null, status: false, success: false, error: null, loading: false },
+  toggleSkillVisibility: { skill: null, status: false, success: false, error: null, loading: false },
 };
 
 export default function(state = initialState, action) {
@@ -50,6 +52,37 @@ export default function(state = initialState, action) {
       return {
         ...state,
         userList: initialState.userList
+      };
+
+    // Start fetching users with skill and set loading = true
+    case FETCH_USERS_WITH_SKILL:
+      return {
+        ...state,
+        userWithSkillList: { skill: null, users: [], error: null, loading: true }
+      };
+
+    // Return list of users and make loading = false
+    case FETCH_USERS_WITH_SKILL_SUCCESS:
+      return {
+        ...state,
+        userWithSkillList: { skill: payload.skill, users: payload.users, error: null, loading: false }
+      };
+
+    // Return error and make loading = false
+    case FETCH_USERS_WITH_SKILL_FAILURE:
+      // Second one is network or server down errors
+      error = payload.data || { message: payload.message };
+
+      return {
+        ...state,
+        userWithSkillList: { skill: null, users: [], error: error, loading: false }
+      };
+
+    // Reset userWithSkillList to initial state
+    case FETCH_USERS_WITH_SKILL_RESET:
+      return {
+        ...state,
+        userWithSkillList: initialState.userWithSkillList
       };
 
 

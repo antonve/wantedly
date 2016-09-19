@@ -6,6 +6,12 @@ export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS'
 export const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE'
 export const FETCH_USERS_RESET = 'FETCH_USERS_RESET'
 
+// User list with skill
+export const FETCH_USERS_WITH_SKILL = 'FETCH_USERS_WITH_SKILL'
+export const FETCH_USERS_WITH_SKILL_SUCCESS = 'FETCH_USERS_WITH_SKILL_SUCCESS'
+export const FETCH_USERS_WITH_SKILL_FAILURE = 'FETCH_USERS_WITH_SKILL_FAILURE'
+export const FETCH_USERS_WITH_SKILL_RESET = 'FETCH_USERS_WITH_SKILL_RESET'
+
 // User profile
 export const FETCH_USER_PROFILE = 'FETCH_USER_PROFILE'
 export const FETCH_USER_PROFILE_SUCCESS = 'FETCH_USER_PROFILE_SUCCESS'
@@ -55,6 +61,31 @@ const actions = {
     return (dispatch) => {
       dispatch({
         type: FETCH_USERS_RESET
+      })
+    }
+  },
+
+  fetchUsersWithSkill: (skillId) => {
+    return (dispatch, getState) => {
+      dispatch({type: FETCH_USERS_WITH_SKILL})
+
+      const request = axios({
+        method: 'get',
+        url: `${ROOT_URL}/skill/${skillId}`,
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
+      }).then((response) => {
+        dispatch({type: FETCH_USERS_WITH_SKILL_SUCCESS, payload: response.data})
+      }).catch((error) => {
+        dispatch({type: FETCH_USERS_WITH_SKILL_FAILURE, payload: error})
+      })
+
+    }
+  },
+
+  resetUsersWithSkill: () => {
+    return (dispatch) => {
+      dispatch({
+        type: FETCH_USERS_WITH_SKILL_RESET
       })
     }
   },

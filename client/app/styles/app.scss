@@ -156,8 +156,8 @@ body
 
   &.info
   {
-      background-color: $info-color;
-      color: isitlight($info-color);
+    background-color: $info-color;
+    color: isitlight($info-color);
   }
 }
 
@@ -171,6 +171,12 @@ body
   }
 }
 
-.button + .button {
+.button + .button
+{
   margin-left: 15px;
+}
+
+.label-heading
+{
+  text-decoration: underline;
 }
