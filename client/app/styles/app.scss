@@ -148,3 +148,17 @@ body
 {
   cursor: default;
 }
+
+.suggestion-list
+{
+  list-style-type: none;
+  padding-bottom: 15px;
+
+  li {
+    margin-right: 7px;
+
+    .button {
+      padding: 7px;
+    }
+  }
+}

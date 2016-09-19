@@ -195,6 +195,14 @@ const actions = {
       })
     }
   },
+
+  fetchSkillSuggestions: (query) => {
+    return axios({
+      method: 'get',
+      url: `${ROOT_URL}/skill/suggestion/${query}`,
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
+    })
+  },
 }
 
 export default actions

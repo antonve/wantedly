@@ -14,6 +14,7 @@ class UserSkills extends React.Component {
     this.state = {
       addSkillModalShown: false,
       showHideSkillButtons: false,
+      suggestions: [],
     }
   }
 
@@ -49,13 +50,40 @@ class UserSkills extends React.Component {
       return null
     }
 
-    let addSkill = this.addSkill
+    let suggestions;
+
+    console.log(this.state.suggestions)
+    if (this.state.suggestions.length > 0) {
+      const suggestionItems = (
+        this.state.suggestions.map((skill, idx) => {
+          return (
+            <li key={skill.id}>
+              <Link className="button" onClick={() => this.onSuggestionClicked(skill.name)}>
+                {skill.name}
+              </Link>
+            </li>
+          )
+        })
+      )
+
+      suggestions = (
+        <div>
+          <h3>Suggestions: </h3>
+          <ul className="suggestion-list grid-block">
+            {suggestionItems}
+          </ul>
+        </div>
+      )
+    }
+
+    const addSkill = this.addSkill
 
     return (
       <Modal modalMode={SHOW_MODAL} closeOnBackgroundMode={CLOSE_ON_BACKGROUND}>
         <div>
           <form onSubmit={() => {this.addSkill()}} className="skill-add-form">
-            <input ref="modalSkillName" type="text" placeholder="Type skill here..." autoFocus={true} />
+            <input ref="modalSkillName" type="text" placeholder="Type skill here..." autoFocus={true} onChange={::this.onSuggest} />
+            {suggestions}
             <button type="button" onClick={() => this.addSkill()} className="button alert">Add skill</button>
             <button type="button" onClick={() => this.hideAddSkillModal()} className="button">Cancel</button>
           </form>
@@ -86,6 +114,32 @@ class UserSkills extends React.Component {
       ...this.state,
       addSkillModalShown: false
     })
+  }
+
+  onSuggest() {
+    const { modalSkillName } = this.refs
+
+    if (modalSkillName.value === '') {
+      this.setState({
+        ...this.state,
+        suggestions: []
+      })
+      return null
+    }
+
+    userActions.fetchSkillSuggestions(modalSkillName.value).then((response) => {
+      this.setState({
+        ...this.state,
+        suggestions: response.data.skills
+      })
+    })
+  }
+
+  onSuggestionClicked(suggestion) {
+    const { modalSkillName } = this.refs
+
+    modalSkillName.value = suggestion
+    this.addSkill()
   }
 
   // Handlers
