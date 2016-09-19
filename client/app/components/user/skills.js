@@ -35,7 +35,7 @@ class UserSkills extends React.Component {
 
     // Fetch profile with updated data after skill visibility toggling
     if (nextProps.toggleSkillVisibility.success === true) {
-      this.props.skills[nextProps.toggleSkillVisibility.skillId].hidden = nextProps.toggleSkillVisibility.status
+      this.props.skills[nextProps.toggleSkillVisibility.skillId].hidden = !nextProps.toggleSkillVisibility.status
       dispatch(userActions.resetToggleUserSkillVisibility())
     }
   }
