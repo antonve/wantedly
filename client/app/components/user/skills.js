@@ -146,9 +146,13 @@ class UserSkills extends React.Component {
       )
     }
 
+    // We're creating an array of the skills for easy sorting
+    const skillsArray = Object.keys(skills).map((key) => skills[key])
+
     return (
-      Object.keys(skills).map((key, idx) => {
-        let skill = skills[key]
+      skillsArray.sort((a, b) => {
+        return b.count - a.count
+      }).map((skill, idx) => {
         let isExpanded = (idx < 6)
         let isActive = skill.users[currentUser.id] !== undefined
 
