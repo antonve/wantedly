@@ -91,8 +91,34 @@ func (userCollection *UserCollection) GetAll() error {
 	return err
 }
 
-// Get a user profile by id
-func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
+// Get a user by id
+func (userCollection *UserCollection) Get(id uint64) (*User, error) {
+	db := GetDatabase()
+	defer db.Close()
+
+	// Init user
+	user := User{}
+
+	// Get user
+	stmt, err := db.Preparex(`
+				SELECT
+					id,
+					email,
+					name
+				FROM user
+				WHERE
+					id = ?
+    `)
+	if err != nil {
+		return nil, err
+	}
+
+	stmt.Get(&user, id)
+	return &user, nil
+}
+
+// GetProfile a user profile by id
+func (userCollection *UserCollection) GetProfile(id uint64) (*UserProfile, error) {
 	db := GetDatabase()
 	defer db.Close()
 

@@ -112,7 +112,7 @@ func APIUserGetByID(context echo.Context) error {
 		return Return500(context, err.Error())
 	}
 
-	userProfile, err := userCollection.Get(id)
+	userProfile, err := userCollection.GetProfile(id)
 	if err != nil {
 		return Return500(context, err.Error())
 	}
