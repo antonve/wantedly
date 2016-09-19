@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 import Gravatar from 'react-circle-gravatar'
-import Modal, { SHOW_MODAL } from '../common/modal'
+import Modal, { SHOW_MODAL, CLOSE_ON_BACKGROUND } from '../common/modal'
 
 import userActions from '../../actions/user'
 import '../../styles/components/user/skills.scss'
@@ -27,7 +27,7 @@ class UserSkills extends React.Component {
     }
 
     return (
-      <Modal modalMode={SHOW_MODAL}>
+      <Modal modalMode={SHOW_MODAL} closeOnBackgroundMode={CLOSE_ON_BACKGROUND}>
         <div>
           <div>
             <button type="button" className="button alert">Add skill</button>
