@@ -19,6 +19,32 @@
     {
       margin-bottom: 5px;
 
+      &.hide-skill-buttons-active
+      {
+        .skill-count
+        {
+          display: none;
+        }
+
+        .skill-hide-button
+        {
+          display: block;
+        }
+      }
+
+      .hide-skill-buttons-disabled
+      {
+        .skill-count
+        {
+          display: block;
+        }
+
+        .skill-hide-button
+        {
+          display: none;
+        }
+      }
+
       &.shrink
       {
         float: left;
@@ -49,10 +75,15 @@
           color: white;
         }
 
-        &:hover
+        &:hover:not(.disabled)
         {
           background-color: $gray;
           color: black;
+        }
+
+        &.disabled
+        {
+          cursor: default;
         }
       }
 
@@ -65,7 +96,7 @@
         font-weight: bold;
       }
 
-      .skill-hide
+      .skill-hide-button
       {
         padding-right: 3px;
         font-size: 30px;
