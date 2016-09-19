@@ -367,7 +367,8 @@ func (user *User) ToggleSkill(skill *Skill, status bool) error {
 	// Toggle skill
 	query := `
         UPDATE userSkill
-				SET hidden = :status
+				SET hidden = :status,
+						dateUpdated = CURRENT_TIMESTAMP
         WHERE
             ownerUserId = :ownerUserId
             AND skillId = :skillId
