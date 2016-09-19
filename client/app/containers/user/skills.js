@@ -6,6 +6,7 @@ import UserSkillsComponent from '../../components/user/skills'
 const mapStateToProps = (state) => {
   return {
     addSkill: state.user.addSkill,
+    toggleSkill: state.user.toggleSkill,
   }
 }
 

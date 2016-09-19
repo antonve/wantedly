@@ -20,10 +20,16 @@ class UserSkills extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { dispatch, user } = this.props
 
-    // Fetch profile with updated data
+    // Fetch profile with updated data after adding a skill
     if (nextProps.addSkill.success === true) {
       dispatch(userActions.fetchUserProfile(user.id))
       dispatch(userActions.resetAddUserSkill())
+    }
+
+    // Fetch profile with updated data after skill toggling
+    if (nextProps.toggleSkill.success === true) {
+      dispatch(userActions.fetchUserProfile(user.id))
+      dispatch(userActions.resetToggleUserSkill())
     }
   }
 
