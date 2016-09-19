@@ -101,18 +101,21 @@ func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 	userProfile.Skills = make(map[uint64]*Skill)
 
 	// Query all skill entries
+	// The COALESCE is needed to avoid nil scan errors,
+	// it's cleaner than having to use NullString/NullInt64 all over the place
+	// and having to convert them all over the place.
 	rows, err := db.Queryx(`
 				SELECT
 					u.id,
 					u.email,
 					u.name,
-					s.id AS skillId,
-					s.name AS skillName,
-					us.addedUserId,
-					us.ownerUserId,
-					hidden,
-					au.name AS addedUserName,
-					au.email AS addedUserEmail
+					COALESCE(s.id, 0) AS skillId,
+					COALESCE(s.name, '') AS skillName,
+					COALESCE(us.addedUserId, 0) AS addedUserId,
+					COALESCE(us.ownerUserId, 0) AS ownerUserId,
+					COALESCE(hidden, false) AS hidden,
+					COALESCE(au.name, '') AS addedUserName,
+					COALESCE(au.email, '') AS addedUserEmail
 				FROM user AS u
 				LEFT JOIN userSkill AS us
 					ON (us.ownerUserId = u.id)
@@ -145,6 +148,11 @@ func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 			}
 		}
 
+		// Don't handle skills if we didn't find any
+		if row.SkillID == 0 {
+			continue
+		}
+
 		// Create skill if we haven't yet
 		if _, ok := userProfile.Skills[row.SkillID]; !ok {
 			userProfile.Skills[row.SkillID] = &Skill{
@@ -156,6 +164,7 @@ func (userCollection *UserCollection) Get(id uint64) (*UserProfile, error) {
 			}
 		}
 
+		// Add user to the list if it's someone else than the profile owner
 		if row.OwnerUserID != row.AddedUserID {
 			userProfile.Skills[row.SkillID].Count++
 
