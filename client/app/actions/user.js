@@ -12,6 +12,12 @@ export const FETCH_USER_PROFILE_SUCCESS = 'FETCH_USER_PROFILE_SUCCESS'
 export const FETCH_USER_PROFILE_FAILURE = 'FETCH_USER_PROFILE_FAILURE'
 export const FETCH_USER_PROFILE_RESET = 'FETCH_USER_PROFILE_RESET'
 
+// User list
+export const ADD_USER_PROFILE = 'ADD_USER_PROFILE'
+export const ADD_USER_PROFILE_SUCCESS = 'ADD_USER_PROFILE_SUCCESS'
+export const ADD_USER_PROFILE_FAILURE = 'ADD_USER_PROFILE_FAILURE'
+export const ADD_USER_PROFILE_RESET = 'ADD_USER_PROFILE_RESET'
+
 
 const ROOT_URL = '/api';
 const actions = {
@@ -62,6 +68,33 @@ const actions = {
     return (dispatch) => {
       dispatch({
         type: FETCH_USER_PROFILE_RESET
+      })
+    }
+  },
+
+  addUserSkill: (params) => {
+    return (dispatch) => {
+      dispatch({type: ADD_USER_PROFILE})
+
+      // Login request
+      const request = axios({
+        method: 'post',
+        data: params,
+        url: `${ROOT_URL}/skill`,
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
+      }).then((response) => {
+        dispatch({type: ADD_USER_PROFILE_SUCCESS})
+      }).catch((error) => {
+        dispatch({type: ADD_USER_PROFILE_FAILURE, payload: error})
+      })
+
+    }
+  },
+
+  resetAddUserSkill: () => {
+    return (dispatch) => {
+      dispatch({
+        type: ADD_USER_PROFILE_RESET
       })
     }
   },

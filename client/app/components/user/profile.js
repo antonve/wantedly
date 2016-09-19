@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 
 import userActions from '../../actions/user'
-import UserSkillsComponent from './skills'
+import UserSkillsContainer from '../../containers/user/skills'
 
 class UserProfile extends React.Component {
   componentDidMount() {
@@ -41,7 +41,7 @@ class UserProfile extends React.Component {
             {user.name}
           </div>
           <div className="card-section">
-            <UserSkillsComponent user={user} skills={skills} currentUser={currentUser} />
+            <UserSkillsContainer user={user} skills={skills} currentUser={currentUser} />
           </div>
         </div>
       )

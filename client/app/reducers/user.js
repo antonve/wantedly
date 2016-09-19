@@ -1,12 +1,14 @@
 import {
   FETCH_USERS, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE, FETCH_USERS_RESET,
   FETCH_USER_PROFILE, FETCH_USER_PROFILE_SUCCESS, FETCH_USER_PROFILE_FAILURE, FETCH_USER_PROFILE_RESET,
+  ADD_USER_PROFILE, ADD_USER_PROFILE_SUCCESS, ADD_USER_PROFILE_FAILURE, ADD_USER_PROFILE_RESET,
 } from '../actions/user';
 
 
 const initialState = {
   userList: { users: [], error: null, loading: false },
   userProfile: { user: null, skills: [], error: null, loading: false },
+  addSkill: { success: false, error: null, loading: false },
 };
 
 export default function(state = initialState, action) {
@@ -76,6 +78,37 @@ export default function(state = initialState, action) {
       return {
         ...state,
         userProfile: initialState.userProfile
+      };
+
+    // Post the new skill and set loading = true
+    case ADD_USER_PROFILE:
+      return {
+        ...state,
+        addSkill: { success: false, error: null, loading: true }
+      };
+
+    // Return list of user profile and make loading = false
+    case ADD_USER_PROFILE_SUCCESS:
+      return {
+        ...state,
+        addSkill: { success: true, error: null, loading: false }
+      };
+
+    // Return error and make loading = false
+    case ADD_USER_PROFILE_FAILURE:
+      // Second one is network or server down errors
+      error = payload.data || { message: payload.message };
+
+      return {
+        ...state,
+        addSkill: { success: true, error: error, loading: false }
+      };
+
+    // Reset userProfile to initial state
+    case ADD_USER_PROFILE_RESET:
+      return {
+        ...state,
+        addSkill: initialState.addSkill
       };
 
     default:

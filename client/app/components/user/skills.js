@@ -16,6 +16,16 @@ class UserSkills extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, user } = this.props
+
+    // Fetch profile with updated data
+    if (nextProps.addSkill.success === true) {
+      dispatch(userActions.fetchUserProfile(user.id))
+      dispatch(userActions.resetAddUserSkill())
+    }
+  }
+
   // Modal
 
   renderAddSkillModal() {
@@ -26,17 +36,34 @@ class UserSkills extends React.Component {
       return null
     }
 
+    let addSkill = this.addSkill
+
     return (
       <Modal modalMode={SHOW_MODAL} closeOnBackgroundMode={CLOSE_ON_BACKGROUND}>
         <div>
           <form className="skill-add-form">
-            <input type="text" placeholder="Type skill here..." />
-            <button type="button" className="button alert">Add skill</button>
+            <input ref="modalSkillName" type="text" placeholder="Type skill here..." />
+            <button type="button" onClick={() => this.addSkill()} className="button alert">Add skill</button>
             <button type="button" onClick={() => this.hideAddSkillModal()} className="button">Cancel</button>
           </form>
         </div>
       </Modal>
     )
+  }
+
+  addSkill() {
+    const { user, dispatch } = this.props
+    const { modalSkillName } = this.refs
+
+    console.log('gegerq', {
+      "user_id": user.id,
+      "name": modalSkillName.value
+    })
+
+    dispatch(userActions.addUserSkill({
+      "user_id": user.id,
+      "name": modalSkillName.value
+    }))
   }
 
   showAddSkillModal() {
