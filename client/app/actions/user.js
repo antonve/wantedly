@@ -18,6 +18,12 @@ export const USER_PROFILE_ADD_SKILL_SUCCESS = 'USER_PROFILE_ADD_SKILL_SUCCESS'
 export const USER_PROFILE_ADD_SKILL_FAILURE = 'USER_PROFILE_ADD_SKILL_FAILURE'
 export const USER_PROFILE_ADD_SKILL_RESET = 'USER_PROFILE_ADD_SKILL_RESET'
 
+// User profile toggle skill
+export const USER_PROFILE_TOGGLE_SKILL = 'USER_PROFILE_TOGGLE_SKILL'
+export const USER_PROFILE_TOGGLE_SKILL_SUCCESS = 'USER_PROFILE_TOGGLE_SKILL_SUCCESS'
+export const USER_PROFILE_TOGGLE_SKILL_FAILURE = 'USER_PROFILE_TOGGLE_SKILL_FAILURE'
+export const USER_PROFILE_TOGGLE_SKILL_RESET = 'USER_PROFILE_TOGGLE_SKILL_RESET'
+
 
 const ROOT_URL = '/api';
 const actions = {
@@ -92,6 +98,33 @@ const actions = {
   },
 
   resetAddUserSkill: () => {
+    return (dispatch) => {
+      dispatch({
+        type: USER_PROFILE_ADD_SKILL_RESET
+      })
+    }
+  },
+
+  toggleUserSkill: (params) => {
+    return (dispatch) => {
+      dispatch({type: USER_PROFILE_TOGGLE_SKILL})
+
+      // Login request
+      const request = axios({
+        method: 'post',
+        data: params,
+        url: `${ROOT_URL}/user/${params.user_id}/skill`,
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
+      }).then((response) => {
+        dispatch({type: USER_PROFILE_TOGGLE_SKILL_SUCCESS})
+      }).catch((error) => {
+        dispatch({type: USER_PROFILE_TOGGLE_SKILL_FAILURE, payload: error})
+      })
+
+    }
+  },
+
+  toggleAddUserSkill: () => {
     return (dispatch) => {
       dispatch({
         type: USER_PROFILE_ADD_SKILL_RESET

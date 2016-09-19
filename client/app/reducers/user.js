@@ -2,6 +2,7 @@ import {
   FETCH_USERS, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE, FETCH_USERS_RESET,
   FETCH_USER_PROFILE, FETCH_USER_PROFILE_SUCCESS, FETCH_USER_PROFILE_FAILURE, FETCH_USER_PROFILE_RESET,
   USER_PROFILE_ADD_SKILL, USER_PROFILE_ADD_SKILL_SUCCESS, USER_PROFILE_ADD_SKILL_FAILURE, USER_PROFILE_ADD_SKILL_RESET,
+  USER_PROFILE_TOGGLE_SKILL, USER_PROFILE_TOGGLE_SKILL_SUCCESS, USER_PROFILE_TOGGLE_SKILL_FAILURE, USER_PROFILE_TOGGLE_SKILL_RESET,
 } from '../actions/user';
 
 
@@ -9,6 +10,7 @@ const initialState = {
   userList: { users: [], error: null, loading: false },
   userProfile: { user: null, skills: [], error: null, loading: false },
   addSkill: { success: false, error: null, loading: false },
+  toggleSkill: { success: false, error: null, loading: false },
 };
 
 export default function(state = initialState, action) {
@@ -104,11 +106,42 @@ export default function(state = initialState, action) {
         addSkill: { success: true, error: error, loading: false }
       };
 
-    // Reset userProfile to initial state
+    // Reset addSkill to initial state
     case USER_PROFILE_ADD_SKILL_RESET:
       return {
         ...state,
         addSkill: initialState.addSkill
+      };
+
+    // Post the new skill and set loading = true
+    case USER_PROFILE_TOGGLE_SKILL:
+      return {
+        ...state,
+        toggleSkill: { success: false, error: null, loading: true }
+      };
+
+    // Return list of user profile and make loading = false
+    case USER_PROFILE_TOGGLE_SKILL_SUCCESS:
+      return {
+        ...state,
+        toggleSkill: { success: true, error: null, loading: false }
+      };
+
+    // Return error and make loading = false
+    case USER_PROFILE_TOGGLE_SKILL_FAILURE:
+      // Second one is network or server down errors
+      error = payload.data || { message: payload.message };
+
+      return {
+        ...state,
+        toggleSkill: { success: true, error: error, loading: false }
+      };
+
+    // Reset toggleSkill to initial state
+    case USER_PROFILE_TOGGLE_SKILL_RESET:
+      return {
+        ...state,
+        toggleSkill: initialState.toggleSkill
       };
 
     default:
