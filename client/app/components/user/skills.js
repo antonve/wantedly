@@ -23,7 +23,7 @@ class UserSkills extends React.Component {
     const { addSkillModalShown } = this.state
 
     if (!addSkillModalShown) {
-      return
+      return null
     }
 
     return (
@@ -50,7 +50,7 @@ class UserSkills extends React.Component {
     let rows = skill.users.map((user, idx) => {
       // We want to limit the list to only 10 users
       if (idx >= 10) {
-        return false
+        return null
       }
 
       // Use Gravatar for the picture because we don't store one ourselves

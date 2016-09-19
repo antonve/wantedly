@@ -51,7 +51,7 @@ class Modal extends React.Component {
 
   closeOnBackground(e) {
     if (this.state.closeOnBackgroundMode !== CLOSE_ON_BACKGROUND) {
-      return
+      return null
     }
 
     if (e.target.id === this.id) {
@@ -79,7 +79,7 @@ class Modal extends React.Component {
 
   render() {
     if (!this.isActive) {
-      return
+      return null
     }
 
     return (
