@@ -3,16 +3,13 @@ import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 
 import userActions from '../../actions/user'
-import UserSkillsContainer from '../../containers/user/skills'
+import UserSkillsComponent from './skills'
 
 class UserProfile extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
   componentDidMount() {
     const { dispatch } = this.props
 
+    // Fetch the profile data from the API
     dispatch(userActions.fetchUserProfile(this.props.userId))
   }
 
