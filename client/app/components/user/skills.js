@@ -56,9 +56,9 @@ class UserSkills extends React.Component {
       // Use Gravatar for the picture because we don't store one ourselves
       return (
         <li key={user.id}>
-          <a href={`/user/${user.id}`}>
+          <Link to={`/user/${user.id}`}>
             <Gravatar email={user.email} size={35} rating="g" default="identicon" />
-          </a>
+          </Link>
         </li>
       )
     })
