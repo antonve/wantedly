@@ -2,11 +2,20 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 import Gravatar from 'react-circle-gravatar'
+import Modal, { SHOW_MODAL } from '../common/modal'
 
 import userActions from '../../actions/user'
 import '../../styles/components/user/skills.scss'
 
 class UserSkills extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      addSkillModalShown: false
+    }
+  }
+
   renderUsers(skill) {
     let rows = skill.users.map((user, idx) => {
       if (idx >= 10) {
@@ -47,13 +56,40 @@ class UserSkills extends React.Component {
     )
   }
 
+  renderAddSkillModal() {
+    const { user, skills } = this.props
+    const { addSkillModalShown } = this.state
+
+    if (!addSkillModalShown) {
+      return
+    }
+
+    return (
+      <Modal modalMode={SHOW_MODAL}>
+        <div>
+          <div>
+            <button type="button" className="button alert">Add skill</button>
+            <button type="button" className="button">Cancel</button>
+          </div>
+        </div>
+      </Modal>
+    )
+  }
+
+  onAddSkillClick() {
+    this.setState({
+      addSkillModalShown: true
+    })
+  }
+
   render() {
     return (
       <div className="skills">
+        {this.renderAddSkillModal()}
         <div className="grid-block">
           <h2 className="small-4">Skills</h2>
           <div className="small-8">
-            <Link className="button pull-right">
+            <Link onClick={() => this.onAddSkillClick()} className="button pull-right">
               <i className="fa fa-plus" aria-hidden="true"></i> Add a skill
             </Link>
           </div>
