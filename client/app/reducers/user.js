@@ -3,6 +3,7 @@ import {
   FETCH_USER_PROFILE, FETCH_USER_PROFILE_SUCCESS, FETCH_USER_PROFILE_FAILURE, FETCH_USER_PROFILE_RESET,
   USER_PROFILE_ADD_SKILL, USER_PROFILE_ADD_SKILL_SUCCESS, USER_PROFILE_ADD_SKILL_FAILURE, USER_PROFILE_ADD_SKILL_RESET,
   USER_PROFILE_TOGGLE_SKILL, USER_PROFILE_TOGGLE_SKILL_SUCCESS, USER_PROFILE_TOGGLE_SKILL_FAILURE, USER_PROFILE_TOGGLE_SKILL_RESET,
+  USER_PROFILE_TOGGLE_VISIBILITY_SKILL, USER_PROFILE_TOGGLE_VISIBILITY_SKILL_SUCCESS, USER_PROFILE_TOGGLE_VISIBILITY_SKILL_FAILURE, USER_PROFILE_TOGGLE_VISIBILITY_SKILL_RESET,
 } from '../actions/user';
 
 
@@ -11,6 +12,7 @@ const initialState = {
   userProfile: { user: null, skills: [], error: null, loading: false },
   addSkill: { success: false, error: null, loading: false },
   toggleSkill: { success: false, error: null, loading: false },
+  toggleSkillVisibility: { skillId: null, status: false, success: false, error: null, loading: false },
 };
 
 export default function(state = initialState, action) {
@@ -142,6 +144,37 @@ export default function(state = initialState, action) {
       return {
         ...state,
         toggleSkill: initialState.toggleSkill
+      };
+
+    // Post the new skill and set loading = true
+    case USER_PROFILE_TOGGLE_VISIBILITY_SKILL:
+      return {
+        ...state,
+        toggleSkillVisibility: { skillId: null, status: false, success: false, error: null, loading: true }
+      };
+
+    // Return list of user profile and make loading = false
+    case USER_PROFILE_TOGGLE_VISIBILITY_SKILL_SUCCESS:
+      return {
+        ...state,
+        toggleSkillVisibility: { skillId: payload.skill_id, status: payload.status, success: true, error: null, loading: false }
+      };
+
+    // Return error and make loading = false
+    case USER_PROFILE_TOGGLE_VISIBILITY_SKILL_FAILURE:
+      // Second one is network or server down errors
+      error = payload.data || { message: payload.message };
+
+      return {
+        ...state,
+        toggleSkillVisibility: { skillId: null, status: false, success: true, error: error, loading: false }
+      };
+
+    // Reset toggleSkill to initial state
+    case USER_PROFILE_TOGGLE_VISIBILITY_SKILL_RESET:
+      return {
+        ...state,
+        toggleSkillVisibility: initialState.toggleSkillVisibility
       };
 
     default:

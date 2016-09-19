@@ -24,6 +24,12 @@ export const USER_PROFILE_TOGGLE_SKILL_SUCCESS = 'USER_PROFILE_TOGGLE_SKILL_SUCC
 export const USER_PROFILE_TOGGLE_SKILL_FAILURE = 'USER_PROFILE_TOGGLE_SKILL_FAILURE'
 export const USER_PROFILE_TOGGLE_SKILL_RESET = 'USER_PROFILE_TOGGLE_SKILL_RESET'
 
+// User profile toggle skill visibility
+export const USER_PROFILE_TOGGLE_VISIBILITY_SKILL = 'USER_PROFILE_TOGGLE_VISIBILITY_SKILL'
+export const USER_PROFILE_TOGGLE_VISIBILITY_SKILL_SUCCESS = 'USER_PROFILE_TOGGLE_VISIBILITY_SKILL_SUCCESS'
+export const USER_PROFILE_TOGGLE_VISIBILITY_SKILL_FAILURE = 'USER_PROFILE_TOGGLE_VISIBILITY_SKILL_FAILURE'
+export const USER_PROFILE_TOGGLE_VISIBILITY_SKILL_RESET = 'USER_PROFILE_TOGGLE_VISIBILITY_SKILL_RESET'
+
 
 const ROOT_URL = '/api';
 const actions = {
@@ -124,10 +130,37 @@ const actions = {
     }
   },
 
-  toggleAddUserSkill: () => {
+  resetToggleUserSkill: () => {
     return (dispatch) => {
       dispatch({
-        type: USER_PROFILE_ADD_SKILL_RESET
+        type: USER_PROFILE_TOGGLE_SKILL_RESET
+      })
+    }
+  },
+
+  toggleUserSkillVisibility: (params) => {
+    return (dispatch) => {
+      dispatch({type: USER_PROFILE_TOGGLE_VISIBILITY_SKILL})
+
+      // Login request
+      const request = axios({
+        method: 'put',
+        data: params,
+        url: `${ROOT_URL}/user/${params.user_id}/skill`,
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('AuthToken')}
+      }).then((response) => {
+        dispatch({type: USER_PROFILE_TOGGLE_VISIBILITY_SKILL_SUCCESS, payload: params})
+      }).catch((error) => {
+        dispatch({type: USER_PROFILE_TOGGLE_VISIBILITY_SKILL_FAILURE, payload: error})
+      })
+
+    }
+  },
+
+  resetToggleUserSkillVisibility: () => {
+    return (dispatch) => {
+      dispatch({
+        type: USER_PROFILE_TOGGLE_VISIBILITY_SKILL_RESET
       })
     }
   },

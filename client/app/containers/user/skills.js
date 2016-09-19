@@ -7,6 +7,7 @@ const mapStateToProps = (state) => {
   return {
     addSkill: state.user.addSkill,
     toggleSkill: state.user.toggleSkill,
+    toggleSkillVisibility: state.user.toggleSkillVisibility,
   }
 }
 

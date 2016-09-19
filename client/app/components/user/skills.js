@@ -31,6 +31,12 @@ class UserSkills extends React.Component {
       dispatch(userActions.fetchUserProfile(user.id))
       dispatch(userActions.resetToggleUserSkill())
     }
+
+    // Fetch profile with updated data after skill visibility toggling
+    if (nextProps.toggleSkillVisibility.success === true) {
+      this.props.skills[nextProps.toggleSkillVisibility.skillId].hidden = nextProps.toggleSkillVisibility.status
+      dispatch(userActions.resetToggleUserSkillVisibility())
+    }
   }
 
   // Modal
@@ -122,6 +128,17 @@ class UserSkills extends React.Component {
     }))
   }
 
+  toggleSkillVisibility(skill, currentStatus) {
+    const { currentUser, dispatch } = this.props
+
+    // Handle clicks on other profiles
+    dispatch(userActions.toggleUserSkillVisibility({
+      "user_id": currentUser.id,
+      "skill_id": skill.id,
+      "status": currentStatus
+    }))
+  }
+
   // Rendering
 
   renderUsers(skill) {
@@ -202,10 +219,10 @@ class UserSkills extends React.Component {
               {skill.count}
               {currentCounterButton}
             </Link>
-            <Link className={`skill-hide-button`} onClick={() => this.hideSkill(skill.id) }>
+            <Link className={`skill-hide-button`} onClick={() => this.toggleSkillVisibility(skill, false) }>
               <i className="fa fa-trash" aria-hidden="true"></i>
             </Link>
-            <Link className={`skill-show-button`} onClick={() => this.showSkill(skill.id) }>
+            <Link className={`skill-show-button`} onClick={() => this.toggleSkillVisibility(skill, true) }>
               <i className="fa fa-undo" aria-hidden="true"></i>
             </Link>
             <span className={titleClasses}>
