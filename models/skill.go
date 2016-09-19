@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // SkillCollection array of users
 type SkillCollection struct {
@@ -89,6 +92,22 @@ func (skillCollection *SkillCollection) Get(id uint64) (*Skill, error) {
 	stmt.Get(&skill, id)
 
 	return &skill, err
+}
+
+// GetSuggestions queries for skills
+func (skillCollection *SkillCollection) GetSuggestions(query string) error {
+	db := GetDatabase()
+	defer db.Close()
+
+	err := db.Select(&skillCollection.Skills, `
+        SELECT
+            id,
+            name
+        FROM skill
+        WHERE name LIKE ?
+    `, fmt.Sprintf("%%%s%%", query))
+
+	return err
 }
 
 // Add a user to the database

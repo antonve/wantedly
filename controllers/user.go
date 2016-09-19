@@ -93,8 +93,6 @@ func APIUserRegister(context echo.Context) error {
 	}
 
 	return Return201(context)
-
-	// return context.JSON(http.StatusOK, token)
 }
 
 // APIUserGetAll gets all users

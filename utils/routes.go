@@ -25,4 +25,5 @@ func SetupRouting(e *echo.Echo) {
 	routesSkill.Use(middleware.JWTWithConfig(GetJWTConfig()))
 	routesSkill.Post("", echo.HandlerFunc(controllers.APISkillAdd))
 	routesSkill.Get("/:id", echo.HandlerFunc(controllers.APIUserGetAllWithSkill))
+	routesSkill.Get("/suggestion/:query", echo.HandlerFunc(controllers.APISkillGetSuggestions))
 }

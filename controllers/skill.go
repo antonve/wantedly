@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"net/http"
 	"wantedly/api/models"
 
 	"github.com/labstack/echo"
@@ -43,4 +44,18 @@ func APISkillAdd(context echo.Context) error {
 	}
 
 	return Return201(context)
+}
+
+// APISkillGetSuggestions get suggestions for a query
+func APISkillGetSuggestions(context echo.Context) error {
+	skillCollection := models.SkillCollection{Skills: make([]models.Skill, 0)}
+	query := context.Param("query")
+
+	// Get suggestions
+	err := skillCollection.GetSuggestions(query)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	return context.JSON(http.StatusOK, skillCollection)
 }
