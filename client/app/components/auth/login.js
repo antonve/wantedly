@@ -43,9 +43,9 @@ class AuthLogin extends React.Component {
 
     if (failed) {
       return (
-        <div>
+        <span className="button alert no-cursor">
           Invalid Credentials
-        </div>
+        </span>
       )
     }
 
@@ -55,7 +55,6 @@ class AuthLogin extends React.Component {
   render() {
     return (
       <form onSubmit={::this.handleAuth}>
-        {::this.errors()}
         <label>Email</label>
         <input
           ref="email"
@@ -70,7 +69,10 @@ class AuthLogin extends React.Component {
           placeholder="Password"
           required={true}
         />
-        <button type="submit" className="button">Log In</button>
+        <div>
+          <button type="submit" className="button">Log In</button>
+          {::this.errors()}
+        </div>
       </form>
     )
   }

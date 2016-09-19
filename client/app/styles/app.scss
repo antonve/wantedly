@@ -76,19 +76,6 @@ body
 
 // Utilities
 
-.link-group
-{
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: rem-calc(14);
-  white-space: nowrap;
-}
-
-.delete-link
-{
-  color: $alert-color;
-}
-
 .bold
 {
   font-weight: bold;
@@ -102,29 +89,6 @@ body
 .hidden
 {
   display: none !important;
-}
-
-.has-error
-{
-  color: $alert-color;
-
-  label
-  {
-    color: $alert-color;
-  }
-
-  input,
-  textarea,
-  select
-  {
-    &,
-    &:hover,
-    &:active,
-    &:focus
-    {
-      border-color: $alert-color;
-    }
-  }
 }
 
 .notification
@@ -143,10 +107,9 @@ body
 
   &.success
   {
-      background-color: $success-color;
-      color: isitlight($success-color);
+    background-color: $success-color;
+    color: isitlight($success-color);
   }
-  padding: 10px;
 
   &.warning
   {
@@ -179,4 +142,9 @@ body
 .label-heading
 {
   text-decoration: underline;
+}
+
+.no-cursor
+{
+  cursor: default;
 }
