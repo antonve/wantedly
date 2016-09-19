@@ -24,4 +24,5 @@ func SetupRouting(e *echo.Echo) {
 	routesSkill := routesAPI.Group("/skill")
 	routesSkill.Use(middleware.JWTWithConfig(GetJWTConfig()))
 	routesSkill.Post("", echo.HandlerFunc(controllers.APISkillAdd))
+	routesSkill.Get("/:id", echo.HandlerFunc(controllers.APIUserGetAllWithSkill))
 }

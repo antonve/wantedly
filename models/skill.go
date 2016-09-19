@@ -68,6 +68,29 @@ func (skillCollection *SkillCollection) GetByName(name string) (*Skill, error) {
 	return &skill, err
 }
 
+// Get returns a skill with a given name
+func (skillCollection *SkillCollection) Get(id uint64) (*Skill, error) {
+	db := GetDatabase()
+	defer db.Close()
+
+	skill := Skill{}
+
+	stmt, err := db.Preparex(`
+        SELECT
+            id,
+            name
+        FROM skill
+        WHERE id = ?
+    `)
+	if err != nil {
+		return nil, err
+	}
+
+	stmt.Get(&skill, id)
+
+	return &skill, err
+}
+
 // Add a user to the database
 func (skillCollection *SkillCollection) Add(skill *Skill) (uint64, error) {
 	db := GetDatabase()

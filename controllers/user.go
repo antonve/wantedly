@@ -109,6 +109,38 @@ func APIUserGetAll(context echo.Context) error {
 	return context.JSON(http.StatusOK, userCollection)
 }
 
+// APIUserGetAllWithSkill gets all users with a certain skill
+func APIUserGetAllWithSkill(context echo.Context) error {
+	userCollection := models.UserCollection{Users: make([]models.User, 0)}
+
+	// Get skill id
+	id, err := strconv.ParseUint(context.Param("id"), 10, 64)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	// Get skill data
+	skillCollection := models.SkillCollection{}
+	skill, err := skillCollection.Get(id)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	// Get all users
+	err = userCollection.GetAllWithSkill(skill.ID)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	// Prepare JSON data
+	data := map[string]interface{}{
+		"users": userCollection.Users,
+		"skill": skill,
+	}
+
+	return context.JSON(http.StatusOK, data)
+}
+
 // APIUserGetByID get the profile of a user
 func APIUserGetByID(context echo.Context) error {
 	userCollection := models.UserCollection{}

@@ -66,7 +66,7 @@ func (user *User) Validate() error {
 	return nil
 }
 
-// GetAll returns all user
+// GetAll returns all users
 func (userCollection *UserCollection) GetAll() error {
 	db := GetDatabase()
 	defer db.Close()
@@ -78,6 +78,27 @@ func (userCollection *UserCollection) GetAll() error {
             email
         FROM user
     `)
+
+	return err
+}
+
+// GetAllWithSkill returns all users with a certain skill
+func (userCollection *UserCollection) GetAllWithSkill(skillID uint64) error {
+	db := GetDatabase()
+	defer db.Close()
+
+	err := db.Select(&userCollection.Users, `
+        SELECT
+            id,
+            name,
+            email
+        FROM user AS u
+				INNER JOIN userSkill AS us
+					ON (u.id = us.ownerUserId)
+				WHERE
+					us.skillId = ?
+				GROUP BY us.ownerUserId, us.SkillId
+    `, skillID)
 
 	return err
 }
