@@ -3,7 +3,6 @@ package controllers
 import (
 	"wantedly/api/models"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
 
@@ -38,15 +37,10 @@ func APISkillAdd(context echo.Context) error {
 	}
 
 	// Save to database
-	err = ownerUser.Add(skill, addedUser.ID)
+	err = ownerUser.AddSkill(skill, addedUser.ID)
 	if err != nil {
 		return Return500(context, err.Error())
 	}
 
 	return Return201(context)
-}
-
-// Helpers
-func getUser(context echo.Context) *models.User {
-	return (context.Get("user").(*jwt.Token).Claims).(*models.JwtClaims).User
 }

@@ -3,7 +3,9 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"wantedly/api/models"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
 
@@ -44,4 +46,8 @@ func Return500(context echo.Context, err string) error {
 
 func Serve500(context echo.Context) error {
 	return context.JSONBlob(http.StatusInternalServerError, []byte(`{"success": false, "errorCode": 500, "errorMessage": "500 internal server error"}`))
+}
+
+func getUser(context echo.Context) *models.User {
+	return (context.Get("user").(*jwt.Token).Claims).(*models.JwtClaims).User
 }

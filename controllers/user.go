@@ -14,6 +14,12 @@ import (
 	"github.com/labstack/echo"
 )
 
+type toggleSkillContent struct {
+	SkillID uint64 `json:"skill_id"`
+	UserID  uint64 `json:"user_id"`
+	Status  bool   `json:"status"`
+}
+
 // APIUserLogin checks if user exists in database and returns jwt token if valid
 func APIUserLogin(context echo.Context) error {
 	// Attempt to bind request to User struct
@@ -144,6 +150,44 @@ func APIUserUpdate(context echo.Context) error {
 	// Update
 	userCollection := models.UserCollection{}
 	err = userCollection.Update(user)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	return Return201(context)
+}
+
+// APIUserToggleSkill toggles a skill on a user
+func APIUserToggleSkill(context echo.Context) error {
+	// Attempt to bind request to addSkillContent struct
+	content := &toggleSkillContent{}
+	err := context.Bind(&content)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	// Create skill struct
+	skill := &models.Skill{ID: content.SkillID}
+
+	// Grab the user who added the skill
+	addedUser := getUser(context)
+
+	// Query which user we should add the skill to
+	ownerUserID, err := strconv.ParseUint(context.Param("id"), 10, 64)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+	userCollection := models.UserCollection{}
+	ownerUser, err := userCollection.Get(ownerUserID)
+
+	// Delete or add skill to user
+	// Save to database
+	if content.Status {
+		err = ownerUser.AddSkill(skill, addedUser.ID)
+	} else {
+		err = ownerUser.DeleteSkill(skill, addedUser.ID)
+	}
+
 	if err != nil {
 		return Return500(context, err.Error())
 	}

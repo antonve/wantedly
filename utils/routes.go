@@ -18,6 +18,7 @@ func SetupRouting(e *echo.Echo) {
 	routesUser.Get("", echo.HandlerFunc(controllers.APIUserGetAll))
 	routesUser.Get("/:id", echo.HandlerFunc(controllers.APIUserGetByID))
 	routesUser.Put("/:id", echo.HandlerFunc(controllers.APIUserUpdate))
+	routesUser.Post("/:id/skill", echo.HandlerFunc(controllers.APIUserToggleSkill))
 
 	routesSkill := routesAPI.Group("/skill")
 	routesSkill.Use(middleware.JWTWithConfig(GetJWTConfig()))

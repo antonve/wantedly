@@ -263,3 +263,76 @@ func (userCollection *UserCollection) Update(user *User) error {
 
 	return err
 }
+
+// AddSkill to a user in the database
+func (user *User) AddSkill(skill *Skill, addedUserID uint64) error {
+	db := GetDatabase()
+	defer db.Close()
+	skillCollection := SkillCollection{Skills: make([]Skill, 0)}
+
+	// We only need to handle skills if we don't have an idea
+	if skill.ID == 0 {
+		// Try to fetch the skill first
+		fetchedSkill, err := skillCollection.GetByName(skill.Name)
+		if err != nil {
+			return err
+		}
+
+		// Insert new skill into the database if we couldn't fetch one
+		if fetchedSkill.ID == 0 {
+			id, err := skillCollection.Add(skill)
+			skill.ID = id
+
+			if err != nil {
+				return err
+			}
+		} else {
+			skill = fetchedSkill
+		}
+	}
+
+	// Attach skill to the user
+	query := `
+        INSERT INTO userSkill
+        SET
+            ownerUserId = :ownerUserId,
+            addedUserId = :addedUserId,
+            skillId = :skillId,
+            hidden = 0
+    `
+
+	data := map[string]interface{}{
+		"ownerUserId": user.ID,
+		"addedUserId": addedUserID,
+		"skillId":     skill.ID,
+	}
+
+	_, err := db.NamedExec(query, data)
+
+	return err
+}
+
+// DeleteSkill to a user in the database
+func (user *User) DeleteSkill(skill *Skill, addedUserID uint64) error {
+	db := GetDatabase()
+	defer db.Close()
+
+	// Attach skill to the user
+	query := `
+        DELETE FROM userSkill
+        WHERE
+            ownerUserId = :ownerUserId
+            AND addedUserId = :addedUserId
+            AND skillId = :skillId
+    `
+
+	data := map[string]interface{}{
+		"ownerUserId": user.ID,
+		"addedUserId": addedUserID,
+		"skillId":     skill.ID,
+	}
+
+	_, err := db.NamedExec(query, data)
+
+	return err
+}
