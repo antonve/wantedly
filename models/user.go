@@ -177,7 +177,7 @@ func (userCollection *UserCollection) GetProfile(id uint64) (*UserProfile, error
 				Name:   row.SkillName,
 				Hidden: row.Hidden,
 				Count:  0,
-				Users:  make([]User, 0),
+				Users:  make(map[uint64]User, 0),
 			}
 		}
 
@@ -190,7 +190,7 @@ func (userCollection *UserCollection) GetProfile(id uint64) (*UserProfile, error
 				Name:  row.AddedUserName,
 				Email: row.AddedUserEmail,
 			}
-			userProfile.Skills[row.SkillID].Users = append(userProfile.Skills[row.SkillID].Users, user)
+			userProfile.Skills[row.SkillID].Users[user.ID] = user
 		}
 	}
 

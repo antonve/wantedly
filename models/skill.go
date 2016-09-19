@@ -9,11 +9,11 @@ type SkillCollection struct {
 
 // Skill model
 type Skill struct {
-	ID     uint64 `json:"id"`
-	Name   string `json:"name"`
-	Hidden bool   `json:"hidden"`
-	Users  []User `json:"users"`
-	Count  int    `json:"count"`
+	ID     uint64          `json:"id"`
+	Name   string          `json:"name"`
+	Hidden bool            `json:"hidden"`
+	Users  map[uint64]User `json:"users"`
+	Count  int             `json:"count"`
 }
 
 // Length returns the amount of skills in the collection

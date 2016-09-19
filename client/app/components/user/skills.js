@@ -55,11 +55,6 @@ class UserSkills extends React.Component {
     const { user, dispatch } = this.props
     const { modalSkillName } = this.refs
 
-    console.log('gegerq', {
-      "user_id": user.id,
-      "name": modalSkillName.value
-    })
-
     dispatch(userActions.addUserSkill({
       "user_id": user.id,
       "name": modalSkillName.value
@@ -81,7 +76,9 @@ class UserSkills extends React.Component {
   // Rendering
 
   renderUsers(skill) {
-    let rows = skill.users.map((user, idx) => {
+    let rows = Object.keys(skill.users).map((key, idx) => {
+      let user = skill.users[key]
+
       // We want to limit the list to only 10 users
       if (idx >= 10) {
         return null
@@ -126,10 +123,11 @@ class UserSkills extends React.Component {
       Object.keys(skills).map((key, idx) => {
         let skill = skills[key]
         let isExpanded = (idx < 6)
+        let isActive = skill.users[currentUser.id] !== undefined
 
         return (
           <li key={skill.id} className={`skill-list-item grid-block ` + (isExpanded ? '' : 'shrink')}>
-            <a href="" className="skill-count grid-block shrink">
+            <a href="" className={`skill-count grid-block shrink ` + (isActive ? 'active' : '')}>
               {skill.count}
             </a>
             <span className={`skill-title ` + (isExpanded ? 'grid-block' : '')}>
