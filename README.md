@@ -7,5 +7,7 @@
 3. Set JWT key, eg: `export WANTEDLY_JWT_KEY="thisIsSuperSecretSoChangeIt"`
 4. Import `database.sql`
 5. Compile application `go build main.go`
-6. Start application `./main`
-7. Create a new account or use any of the test accounts. (password for all accounts is `test`)
+6. Install npm
+7. Install npm modules `cd client/ && npm install`
+8. Start application `cd .. && ./main`
+9. Create a new account or use any of the test accounts. (password for all accounts is `test`)
