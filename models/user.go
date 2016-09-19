@@ -336,3 +336,28 @@ func (user *User) DeleteSkill(skill *Skill, addedUserID uint64) error {
 
 	return err
 }
+
+// ToggleSkill of a user in the database
+func (user *User) ToggleSkill(skill *Skill, status bool) error {
+	db := GetDatabase()
+	defer db.Close()
+
+	// Toggle skill
+	query := `
+        UPDATE userSkill
+				SET hidden = :status
+        WHERE
+            ownerUserId = :ownerUserId
+            AND skillId = :skillId
+    `
+
+	data := map[string]interface{}{
+		"ownerUserId": user.ID,
+		"skillId":     skill.ID,
+		"status":      !status,
+	}
+
+	_, err := db.NamedExec(query, data)
+
+	return err
+}

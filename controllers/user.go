@@ -194,3 +194,28 @@ func APIUserToggleSkill(context echo.Context) error {
 
 	return Return201(context)
 }
+
+// APIUserToggleSkillVisibility toggles the visibility of a skill on a user
+func APIUserToggleSkillVisibility(context echo.Context) error {
+	// Attempt to bind request to addSkillContent struct
+	content := &toggleSkillContent{}
+	err := context.Bind(&content)
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	// Create skill struct
+	skill := &models.Skill{ID: content.SkillID}
+
+	// Grab the user whose skills we want to toggle the visibility of
+	currentUser := getUser(context)
+
+	// Save to database
+	err = currentUser.ToggleSkill(skill, content.Status)
+
+	if err != nil {
+		return Return500(context, err.Error())
+	}
+
+	return Return201(context)
+}
