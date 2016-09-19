@@ -97,6 +97,7 @@ func (userCollection *UserCollection) GetAllWithSkill(skillID uint64) error {
 					ON (u.id = us.ownerUserId)
 				WHERE
 					us.skillId = ?
+					AND us.hidden = 0
 				GROUP BY us.ownerUserId, us.SkillId
     `, skillID)
 
