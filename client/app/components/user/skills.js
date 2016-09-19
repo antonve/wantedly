@@ -175,23 +175,39 @@ class UserSkills extends React.Component {
       skillsArray.sort((a, b) => {
         return b.count - a.count
       }).map((skill, idx) => {
+        // Conditions
         const isExpanded = (idx < 6)
         const isActive = skill.users[currentUser.id] !== undefined
         const isOwner = currentUser.id === user.id
+
+        // Buttons
         const minusButton = <i className="fa fa-minus skill-minus" aria-hidden="true"></i>
         const plusButton = <i className="fa fa-plus skill-plus" aria-hidden="true"></i>
+        const currentCounterButton = !isOwner ? (isActive ? minusButton : plusButton) : ''
+
+        // Classes
+        const hideHideSkillButtonsClass = 'hide-skill-buttons-' + (this.state.showHideSkillButtons ? 'active' : 'disabled')
+        const sizeClass = (isExpanded ? '' : 'shrink ')
+        const liClasses = `skill-list-item grid-block ${sizeClass} ${hideHideSkillButtonsClass}`
+        const titleClasses = `skill-title ` + (isExpanded ? 'grid-block' : '')
+        const counterClasses = `skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (isOwner ? 'disabled' : '')
+
+        // Rest
+        const users = isExpanded ? this.renderUsers(skill) : ''
 
         return (
-          <li key={skill.id} className={`skill-list-item grid-block ` + (isExpanded ? '' : 'shrink ') + 'hide-skill-buttons-' + (this.state.showHideSkillButtons ? 'active' : 'disabled')}>
-            <Link onClick={() => this.handleSkillClick(skill, user, isActive)} className={`skill-count grid-block shrink ` + (isActive ? 'active ' : '') + (isOwner ? 'disabled' : '')}>
+          <li key={skill.id} className={liClasses}>
+            <Link onClick={() => this.handleSkillClick(skill, user, isActive)} className={counterClasses}>
               {skill.count}
-              {!isOwner ? (isActive ? minusButton : plusButton) : ''}
+              {currentCounterButton}
             </Link>
-            <Link className={`skill-hide-button`} onClick={() => this.showHideSkillButtons() }><i className="fa fa-trash" aria-hidden="true"></i></Link>
-            <span className={`skill-title ` + (isExpanded ? 'grid-block' : '')}>
+            <Link className={`skill-hide-button`} onClick={() => this.showHideSkillButtons() }>
+              <i className="fa fa-trash" aria-hidden="true"></i>
+            </Link>
+            <span className={titleClasses}>
               {skill.name}
             </span>
-            {isExpanded ? this.renderUsers(skill) : ''}
+            {users}
           </li>
         )
       })
