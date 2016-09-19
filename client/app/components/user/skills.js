@@ -71,7 +71,7 @@ class UserSkills extends React.Component {
     })
 
     return (
-      <ul className="grid-block small-6 skill-user-list align-right">
+      <ul className="grid-block skill-user-list align-right">
         {rows}
       </ul>
     )
