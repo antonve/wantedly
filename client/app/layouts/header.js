@@ -19,7 +19,7 @@ class Header extends React.Component {
       )
     } else {
       menu = (
-        <ul className="menu-bar condense">
+        <ul className="vertical medium-horizontal menu-bar condense">
           <li><Link to="/">People</Link></li>
           <li><Link to={`/user/${currentUser.id}`}>Profile</Link></li>
           <li><Link onClick={() => this.props.logout()}>Logout</Link></li>
@@ -28,7 +28,7 @@ class Header extends React.Component {
     }
 
     return (
-      <nav className="small-6 small-offset-4 menu-group-right">
+      <nav className="small-6 medium-9 menu-group-right">
         {menu}
       </nav>
     )
@@ -37,7 +37,7 @@ class Header extends React.Component {
   render() {
     return (
       <header className="grid-block app-header menu-group">
-        <div className="small-2 logo">
+        <div className="small-6 medium-3 logo">
           <Link to="/">Wantedly</Link>
         </div>
         {::this.nav()}
