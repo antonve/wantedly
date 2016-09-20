@@ -105,14 +105,16 @@ class UserSkills extends React.Component {
   showAddSkillModal() {
     this.setState({
       ...this.state,
-      addSkillModalShown: true
+      addSkillModalShown: true,
+      suggestions: [],
     })
   }
 
   hideAddSkillModal() {
     this.setState({
       ...this.state,
-      addSkillModalShown: false
+      addSkillModalShown: false,
+      suggestions: [],
     })
   }
 
